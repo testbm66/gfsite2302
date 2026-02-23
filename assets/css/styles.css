@@ -835,7 +835,7 @@ h1, h2, h3, h4, h5, h6 {
    Process Section (scroll-pinned)
 ================================ */
 .process__wrapper {
-  height: 600vh;
+  height: 200vh;
   position: relative;
   background: var(--color-green-pale);
 }
@@ -894,83 +894,36 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1;
   text-align: center;
   width: 100%;
-  max-width: 560px;
+  max-width: 1200px;
   padding: 0 var(--space-lg);
-}
-
-.process__content .section-header {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  will-change: opacity, transform;
 }
 
 .process__stage {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  transition: transform 0.3s ease;
-  will-change: transform;
-}
-
-.process__preview-above,
-.process__preview-below {
-  width: 70%;
-  max-width: 390px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.45);
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  opacity: 0;
-  flex-shrink: 0;
-}
-
-.process__preview-below {
-  border-radius: 0 0 10px 10px;
-}
-
-.process__preview-above.is-visible,
-.process__preview-below.is-visible {
-  opacity: 1;
 }
 
 .process__step-container {
-  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
   width: 100%;
-  min-height: 280px;
 }
 
 .process__step {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  transform: translateY(60px) scale(0.95);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: none;
-}
-
-.process__step.is-active {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-.process__step.is-exiting {
-  opacity: 0;
-  transform: translateY(-40px) scale(0.95);
+  flex: 1;
+  min-width: 0;
 }
 
 .process__card {
   position: relative;
   background: var(--color-white);
   border-radius: 16px;
-  padding: 2.5rem 2rem 2rem;
+  padding: 1.75rem 1.25rem 1.5rem;
   text-align: center;
   border-top: 3px solid var(--color-green);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  height: 100%;
 }
 
 .process__badge {
@@ -992,9 +945,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .process__icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto var(--space-lg);
+  width: 52px;
+  height: 52px;
+  margin: 0 auto var(--space-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1003,23 +956,39 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 50%;
 }
 
+.process__icon svg {
+  width: 26px;
+  height: 26px;
+}
+
 .process__title {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--color-dark);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
   line-height: 1.35;
 }
 
 .process__desc {
   color: var(--color-gray-500);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .process__cta {
   text-align: center;
   margin-top: var(--space-2xl);
+}
+
+/* Tablet: wrap cards into rows */
+@media (max-width: 1100px) and (min-width: 769px) {
+  .process__step-container {
+    flex-wrap: wrap;
+  }
+
+  .process__step {
+    flex: 0 0 calc(33.333% - 0.75rem);
+  }
 }
 
 /* Mobile fallback: no pinning, show all cards stacked */
@@ -1035,9 +1004,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .process__sun,
-  .process__glow,
-  .process__preview-above,
-  .process__preview-below {
+  .process__glow {
     display: none;
   }
 
@@ -1045,34 +1012,9 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 100%;
   }
 
-  .process__content .section-header {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .process__stage {
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
-  }
-
   .process__step-container {
-    display: flex;
     flex-direction: column;
-    gap: var(--space-xl);
-  }
-
-  .process__step {
-    position: relative;
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-  }
-
-  .process__step.is-exiting {
-    opacity: 1;
-    transform: none;
+    gap: var(--space-lg);
   }
 
   .process__card {

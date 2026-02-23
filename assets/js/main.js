@@ -104,13 +104,6 @@ function initProcessScroll() {
 
   const sun = wrapper.querySelector('.process__sun');
   const glow = wrapper.querySelector('.process__glow');
-  const sectionHeader = wrapper.querySelector('.section-header');
-  const stage = wrapper.querySelector('.process__stage');
-  const steps = wrapper.querySelectorAll('.process__step');
-  const previewAbove = wrapper.querySelector('.process__preview-above');
-  const previewBelow = wrapper.querySelector('.process__preview-below');
-  const totalSteps = steps.length;
-  let lastActiveIndex = -1;
 
   let ticking = false;
 
@@ -131,65 +124,10 @@ function initProcessScroll() {
     const scrollRange = wrapperHeight - viewportH;
     const progress = Math.max(0, Math.min(1, scrolled / scrollRange));
 
-    const sunPhaseEnd = 0.15;
-    const cardsStart = sunPhaseEnd;
-    const cardsEnd = 0.95;
-
-    const sunProgress = Math.min(1, progress / sunPhaseEnd);
+    const sunProgress = Math.min(1, progress);
     const sunY = 100 - (sunProgress * 350);
     sun.style.transform = 'translateY(' + sunY + '%)';
     glow.style.opacity = Math.min(1, sunProgress * 1.2);
-
-    // Fade out header between 12% and 20%
-    var headerFadeStart = 0.12;
-    var headerFadeEnd = 0.20;
-    if (progress <= headerFadeStart) {
-      sectionHeader.style.opacity = '1';
-      sectionHeader.style.transform = 'translateY(0)';
-      stage.style.transform = 'translateY(0)';
-    } else if (progress >= headerFadeEnd) {
-      sectionHeader.style.opacity = '0';
-      sectionHeader.style.transform = 'translateY(-30px)';
-      sectionHeader.style.pointerEvents = 'none';
-      stage.style.transform = 'translateY(-80px)';
-    } else {
-      var headerP = (progress - headerFadeStart) / (headerFadeEnd - headerFadeStart);
-      sectionHeader.style.opacity = String(1 - headerP);
-      sectionHeader.style.transform = 'translateY(' + (-30 * headerP) + 'px)';
-      sectionHeader.style.pointerEvents = headerP > 0.5 ? 'none' : 'auto';
-      stage.style.transform = 'translateY(' + (-80 * headerP) + 'px)';
-    }
-
-    // Cards: progress cardsStart -> cardsEnd
-    const cardProgress = Math.max(0, Math.min(1, (progress - cardsStart) / (cardsEnd - cardsStart)));
-    const activeIndex = Math.min(totalSteps - 1, Math.floor(cardProgress * totalSteps));
-
-    if (activeIndex !== lastActiveIndex) {
-      steps.forEach((step, i) => {
-        step.classList.remove('is-active');
-        step.classList.remove('is-exiting');
-      });
-      if (lastActiveIndex >= 0 && lastActiveIndex < totalSteps) {
-        steps[lastActiveIndex].classList.add('is-exiting');
-      }
-      steps[activeIndex].classList.add('is-active');
-
-      // Rolodex: show preview card above if there are cards before
-      if (activeIndex > 0) {
-        previewAbove.classList.add('is-visible');
-      } else {
-        previewAbove.classList.remove('is-visible');
-      }
-
-      // Rolodex: show preview card below if there are cards after
-      if (activeIndex < totalSteps - 1) {
-        previewBelow.classList.add('is-visible');
-      } else {
-        previewBelow.classList.remove('is-visible');
-      }
-
-      lastActiveIndex = activeIndex;
-    }
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
