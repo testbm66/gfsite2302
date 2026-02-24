@@ -466,6 +466,33 @@ h1, h2, h3, h4, h5, h6 {
   height: 22px;
 }
 
+/* Responsive hero background - prevent house overlapping text on smaller desktops */
+@media (max-width: 1600px) and (min-width: 969px) {
+  .hero__bg {
+    left: 35%;
+  }
+
+  .hero__bg-image {
+    object-position: right center;
+  }
+}
+
+@media (max-width: 1400px) and (min-width: 969px) {
+  .hero__bg {
+    left: 45%;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 969px) {
+  .hero__bg {
+    left: 50%;
+  }
+
+  .hero__content {
+    max-width: 520px;
+  }
+}
+
 /* Mobile Hero Image - shown as separate element */
 .hero__mobile-image {
   display: none;
