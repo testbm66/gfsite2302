@@ -90,13 +90,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }, observerOptions);
   
   // Observe elements with animation classes
-  document.querySelectorAll('.service-card, .testimonial, .value').forEach(el => {
+  document.querySelectorAll('.service-card, .difference__item').forEach(el => {
     el.classList.add('fade-in');
     observer.observe(el);
   });
 
   // Scroll-pinned process section animation
   initProcessScroll();
+
+  // Reviews strip carousel
+  initReviewsStrip();
+
+  // Difference image crossfade
+  initDifferenceSwap();
 });
 
 function initLogoCarousel() {
@@ -170,6 +176,8 @@ function initProcessScroll() {
 
   const sun = wrapper.querySelector('.process__sun');
   const glow = wrapper.querySelector('.process__glow');
+  const cards = wrapper.querySelectorAll('.process__card');
+  const totalCards = cards.length;
 
   let ticking = false;
 
@@ -194,10 +202,59 @@ function initProcessScroll() {
     const sunY = 100 - (sunProgress * 350);
     sun.style.transform = 'translateY(' + sunY + '%)';
     glow.style.opacity = Math.min(1, sunProgress * 1.2);
+
+    var activeIndex = Math.floor(progress * totalCards);
+    if (activeIndex >= totalCards) activeIndex = totalCards - 1;
+
+    cards.forEach(function(card, i) {
+      card.classList.remove('process__card--active', 'process__card--visited');
+      if (i < activeIndex) {
+        card.classList.add('process__card--visited');
+      } else if (i === activeIndex) {
+        card.classList.add('process__card--active');
+      }
+    });
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
   update();
+}
+
+function initReviewsStrip() {
+  var track = document.querySelector('.reviews-strip__track');
+  if (!track) return;
+
+  var origCards = Array.from(track.querySelectorAll('.reviews-strip__card'));
+  if (!origCards.length) return;
+
+  var clonesNeeded = 3;
+  for (var i = 0; i < clonesNeeded; i++) {
+    origCards.forEach(function(card) {
+      track.appendChild(card.cloneNode(true));
+    });
+  }
+
+  var totalSets = clonesNeeded + 1;
+  var offsetPercent = 100 / totalSets;
+  track.style.setProperty('--reviews-offset', '-' + offsetPercent + '%');
+  track.style.setProperty('--reviews-duration', (35 * totalSets / 2) + 's');
+
+  track.classList.add('is-scrolling');
+}
+
+function initDifferenceSwap() {
+  var container = document.getElementById('differenceVisual');
+  if (!container) return;
+
+  var imgs = container.querySelectorAll('.difference__img');
+  if (imgs.length < 2) return;
+
+  var current = 0;
+  setInterval(function() {
+    imgs[current].classList.remove('difference__img--active');
+    current = (current + 1) % imgs.length;
+    imgs[current].classList.add('difference__img--active');
+  }, 5000);
 }
 
 // Add CSS for animations dynamically
