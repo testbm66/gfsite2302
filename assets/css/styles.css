@@ -546,19 +546,28 @@ h1, h2, h3, h4, h5, h6 {
    Logo Carousel Section
 ================================ */
 .logo-carousel {
-  padding: var(--space-xl) 0;
+  padding: var(--space-2xl) 0;
   background: var(--color-white);
   border-bottom: 1px solid var(--color-gray-100);
   overflow: hidden;
   width: 100%;
+  position: relative;
 }
 
 .logo-carousel__track {
   display: flex;
   gap: var(--space-4xl);
-  animation: scroll 35s linear infinite;
   width: max-content;
   align-items: center;
+  will-change: transform;
+}
+
+.logo-carousel__track.is-scrolling {
+  animation: carousel-scroll var(--carousel-duration, 40s) linear infinite;
+}
+
+.logo-carousel:hover .logo-carousel__track.is-scrolling {
+  animation-play-state: paused;
 }
 
 .logo-carousel__slide {
@@ -566,7 +575,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80px;
+  height: 100px;
 }
 
 .logo-carousel__slide a {
@@ -576,7 +585,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .logo-carousel__slide img {
-  max-height: 55px;
+  max-height: 75px;
   width: auto;
   object-fit: contain;
   filter: grayscale(100%);
@@ -590,24 +599,49 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.15);
 }
 
+.logo-carousel__tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--color-gray-900, #1a1a1a);
+  color: var(--color-white, #fff);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  max-width: 260px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+.logo-carousel__tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (max-width: 768px) {
   .logo-carousel__track {
     gap: var(--space-2xl);
   }
   .logo-carousel__slide {
-    height: 60px;
+    height: 70px;
   }
   .logo-carousel__slide img {
-    max-height: 40px;
+    max-height: 50px;
+  }
+  .logo-carousel__tooltip {
+    display: none;
   }
 }
 
-@keyframes scroll {
+@keyframes carousel-scroll {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(var(--carousel-offset, -50%));
   }
 }
 

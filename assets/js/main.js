@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
+  // Logo Carousel: infinite loop + tooltips
+  initLogoCarousel();
+
   // Intersection Observer for fade-in animations
   const observerOptions = {
     threshold: 0.1,
@@ -95,6 +98,69 @@ document.addEventListener('DOMContentLoaded', () => {
   // Scroll-pinned process section animation
   initProcessScroll();
 });
+
+function initLogoCarousel() {
+  const track = document.querySelector('.logo-carousel__track');
+  const tooltip = document.querySelector('.logo-carousel__tooltip');
+  if (!track) return;
+
+  const originalSlides = Array.from(track.querySelectorAll('.logo-carousel__slide'));
+  if (!originalSlides.length) return;
+
+  const clonesNeeded = 3;
+  for (let i = 0; i < clonesNeeded; i++) {
+    originalSlides.forEach(slide => {
+      track.appendChild(slide.cloneNode(true));
+    });
+  }
+
+  const totalSets = clonesNeeded + 1;
+  const offsetPercent = (100 / totalSets);
+  track.style.setProperty('--carousel-offset', '-' + offsetPercent + '%');
+
+  const baseDuration = 40;
+  track.style.setProperty('--carousel-duration', (baseDuration * totalSets / 2) + 's');
+
+  track.classList.add('is-scrolling');
+
+  if (!tooltip) return;
+
+  const allSlides = track.querySelectorAll('.logo-carousel__slide');
+
+  allSlides.forEach(slide => {
+    const text = slide.getAttribute('data-tooltip');
+    if (!text) return;
+
+    slide.addEventListener('mouseenter', () => {
+      tooltip.textContent = text;
+      tooltip.classList.add('is-visible');
+    });
+
+    slide.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('is-visible');
+    });
+
+    slide.addEventListener('mousemove', (e) => {
+      const offsetX = 16;
+      const offsetY = 16;
+      let x = e.clientX + offsetX;
+      let y = e.clientY + offsetY;
+
+      const tipWidth = tooltip.offsetWidth;
+      const tipHeight = tooltip.offsetHeight;
+
+      if (x + tipWidth > window.innerWidth - 8) {
+        x = e.clientX - tipWidth - offsetX;
+      }
+      if (y + tipHeight > window.innerHeight - 8) {
+        y = e.clientY - tipHeight - offsetY;
+      }
+
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+    });
+  });
+}
 
 function initProcessScroll() {
   const wrapper = document.getElementById('processWrapper');
