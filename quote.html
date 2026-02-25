@@ -56,8 +56,8 @@
   <main class="quiz-main">
     <form id="solarQuiz" class="quiz-form" novalidate>
       
-      <!-- Step 1: Solar Status -->
-      <div class="quiz-step is-active" data-step="1">
+      <!-- Step 1: Solar Status (hidden — no longer first step) -->
+      <div class="quiz-step" data-step="1" style="display: none;">
         <h2 class="quiz-step__title">Do you already have solar panels?</h2>
         
         <div class="quiz-options quiz-options--grid">
@@ -121,7 +121,7 @@
       </div>
 
       <!-- Step 2: Location Type -->
-      <div class="quiz-step" data-step="2">
+      <div class="quiz-step is-active" data-step="2">
         <h2 class="quiz-step__title">Where would you like solar panels installed?</h2>
         
         <div class="quiz-options quiz-options--two">
@@ -848,7 +848,7 @@
                   </div>
                   <div class="pkg-battery-card" data-battery="sigenergy">
                     <div class="pkg-battery-card__info">
-                      <span class="pkg-battery-card__name">Sigenergy Battery</span>
+                      <span class="pkg-battery-card__name">Sigenergy 10 kWh</span>
                       <span class="pkg-battery-card__desc">Smart AI-powered storage</span>
                     </div>
                     <div class="pkg-battery-card__qty">
@@ -881,6 +881,23 @@
                 </div>
               </div>
 
+              <!-- Included as Standard -->
+              <div class="pkg-section">
+                <h3 class="pkg-section__title">Included as Standard</h3>
+                <div class="pkg-included-list">
+                  <div class="pkg-included">
+                    <div class="pkg-included__card">
+                      <svg class="pkg-included__check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      <div class="pkg-included__info">
+                        <span class="pkg-included__name">Bird Protection</span>
+                        <span class="pkg-included__desc">Guard mesh for panels</span>
+                      </div>
+                      <span class="pkg-included__badge">Included</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- Add-ons -->
               <div class="pkg-section">
                 <h3 class="pkg-section__title">Optional Add-ons</h3>
@@ -896,13 +913,23 @@
                     </div>
                   </label>
                   <label class="pkg-addon">
-                    <input type="checkbox" name="pkgAddonBird" value="bird-protection">
+                    <input type="checkbox" name="pkgAddonBackup" value="backup-gateway">
                     <div class="pkg-addon__card">
                       <div class="pkg-addon__info">
-                        <span class="pkg-addon__name">Bird Protection</span>
-                        <span class="pkg-addon__desc">Guard mesh for panels</span>
+                        <span class="pkg-addon__name">Backup Gateway</span>
+                        <span class="pkg-addon__desc">Home backup during power cuts</span>
                       </div>
-                      <span class="pkg-addon__price">+ &pound;299</span>
+                      <span class="pkg-addon__price">+ &pound;950</span>
+                    </div>
+                  </label>
+                  <label class="pkg-addon">
+                    <input type="checkbox" name="pkgAddonDiverter" value="solo-diverter">
+                    <div class="pkg-addon__card">
+                      <div class="pkg-addon__info">
+                        <span class="pkg-addon__name">Solo Diverter</span>
+                        <span class="pkg-addon__desc">Divert surplus solar to hot water</span>
+                      </div>
+                      <span class="pkg-addon__price">+ &pound;650</span>
                     </div>
                   </label>
                 </div>

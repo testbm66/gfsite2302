@@ -47,12 +47,16 @@ const PRICING = {
   batteries: {
     none:      { label: 'No battery',        price: 0    },
     duracell:  { label: 'Duracell 5 kWh',    price: 2500 },
-    sigenergy: { label: 'Sigenergy Battery',  price: 3500 },
+    sigenergy: { label: 'Sigenergy 10 kWh',    price: 3500 },
     tesla:     { label: 'Tesla Powerwall 3',  price: 4500 },
   },
   addons: {
     'ev-charger':      { label: 'EV Charger',      price: 999 },
-    'bird-protection': { label: 'Bird Protection',  price: 299 },
+    'backup-gateway':  { label: 'Backup Gateway',   price: 950 },
+    'solo-diverter':   { label: 'Solo Diverter',    price: 650 },
+  },
+  included: {
+    'bird-protection': { label: 'Bird Protection',  price: 0 },
   },
   depositRate: 0.20,
 };
@@ -73,26 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
   let currentStepIndex = 0;
   let stepHistory = [0];
-  let formData = {};
+  let formData = { solarStatus: 'not-yet' };
   let isSubmitting = false;
   
   const stepFlow = {
-    default:  [1, 2, 3, 4, 5, 6, 8, 9, 'calculating', 'package', 'order-summary'],
-    existing: [1, 7, 8, 9],
-    business: [1, 2, '3b', 4, 5, 6, 8, 9, 'calculating', 'package', 'order-summary']
+    default:  [2, 3, 4, 5, 6, 8, 9, 'calculating', 'package', 'order-summary'],
+    business: [2, '3b', 4, 5, 6, 8, 9, 'calculating', 'package', 'order-summary']
   };
   
   /**
    * Get the appropriate step flow based on user selections
    */
   function getStepFlow() {
-    const solarStatus = formData.solarStatus;
     const location = formData.location;
     const systemSize = formData.systemSize;
-    
-    if (solarStatus === 'yes-working' || solarStatus === 'yes-unsure') {
-      return stepFlow.existing;
-    }
     
     let flow;
     if (location === 'business') {
@@ -961,6 +959,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (ad) linesHtml += `<div class="order-summary__line"><span>${ad.label}</span><span>${fmtGBP(ad.price)}</span></div>`;
     });
 
+    for (const [key, item] of Object.entries(PRICING.included || {})) {
+      linesHtml += `<div class="order-summary__line"><span>${item.label}</span><span style="color:var(--color-green);font-weight:600;">Included</span></div>`;
+    }
+
     orderLines.innerHTML = linesHtml;
     if (orderTotal)   orderTotal.textContent   = fmtGBP(total);
     if (orderDeposit) orderDeposit.textContent  = fmtGBP(deposit);
@@ -1222,6 +1224,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Initialize
-  showStep(1);
+  showStep(2);
   updateProgress();
 });
