@@ -350,6 +350,7 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
   background: var(--color-green-bg);
   width: 100%;
+  min-height: 85vh;
 }
 
 .hero__bg {
@@ -732,7 +733,7 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(2, 1fr);
   gap: 2.5rem;
   max-width: 63%;
-  margin: 0 auto 0 0;
+  margin: 0 auto;
 }
 
 .services__column {
@@ -885,10 +886,10 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   height: 100vh;
   display: flex;
-  align-items: flex-start;
-  padding-top: var(--space-3xl);
+  align-items: center;
   justify-content: center;
   background: var(--color-green-pale);
+  padding-bottom: var(--space-4xl);
 }
 
 .process__sun {
