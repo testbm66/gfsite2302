@@ -358,7 +358,7 @@
               </div>
               <div class="quiz-option__text">
                 <span class="quiz-option__label">2 Bedroom House</span>
-                <span class="quiz-option__desc">4-8 panels, typical savings £600-900/year</span>
+                <span class="quiz-option__desc">Typical annual electricity consumption of 2,000-3,500 kWh</span>
               </div>
             </div>
           </label>
@@ -378,7 +378,7 @@
               </div>
               <div class="quiz-option__text">
                 <span class="quiz-option__label">3-4 Bedroom House</span>
-                <span class="quiz-option__desc">8-12 panels, typical savings £900-1,400/year</span>
+                <span class="quiz-option__desc">Typical annual electricity consumption of 3,000-4,500 kWh</span>
               </div>
             </div>
           </label>
@@ -395,7 +395,7 @@
               </div>
               <div class="quiz-option__text">
                 <span class="quiz-option__label">5+ Bedroom House</span>
-                <span class="quiz-option__desc">12+ panels, typical savings £1,400-2,000+/year</span>
+                <span class="quiz-option__desc">Typical annual electricity consumption of 5,000+ kWh</span>
               </div>
             </div>
           </label>
@@ -438,7 +438,7 @@
             <span class="bill-calculator__period">/ month</span>
           </div>
           
-          <button type="button" class="btn btn--primary btn--lg btn--block" id="calculatePanelsBtn">Calculate My Panels</button>
+          <button type="button" class="btn btn--primary btn--lg btn--block" id="calculatePanelsBtn">Calculate My System Size</button>
           
           <div class="bill-calculator__result" id="calculatorResult" style="display: none;">
             <div class="bill-calculator__result-header">
@@ -452,7 +452,7 @@
                 </svg>
               </div>
               <div class="bill-calculator__result-text">
-                <span class="bill-calculator__result-label">We recommend</span>
+                <span class="bill-calculator__result-label">Recommended system</span>
                 <span class="bill-calculator__result-panels" id="resultPanels">--</span>
               </div>
             </div>
@@ -472,7 +472,7 @@
               </div>
             </div>
             
-            <p class="bill-calculator__disclaimer">These are rough estimates based on average UK energy rates (28p/kWh) and typical panel output in Scotland (~350 kWh/panel/year). Your actual results may vary — our survey will give you an exact figure.</p>
+            <p class="bill-calculator__disclaimer">These are rough estimates based on average UK energy rates (28p/kWh) and typical solar output in Scotland. Your actual results may vary — our survey will give you an exact figure.</p>
             
             <button type="button" class="btn btn--primary btn--lg btn--block" id="useRecommendationBtn">Use This Recommendation</button>
           </div>
@@ -809,21 +809,20 @@
                   <span class="pkg-section__price" id="pkgPanelPrice">--</span>
                 </div>
                 <div class="pkg-panel-selector">
-                  <button type="button" class="pkg-panel-btn" id="panelMinus" aria-label="Remove panels">
+                  <button type="button" class="pkg-panel-btn" id="panelMinus" aria-label="Smaller system">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   </button>
                   <div class="pkg-panel-display">
-                    <span class="pkg-panel-count" id="panelCount">8</span>
-                    <span class="pkg-panel-label">panels</span>
-                    <span class="pkg-panel-kw" id="panelKw">3.4 kW system</span>
+                    <span class="pkg-panel-count" id="panelCount" style="display:none;">8</span>
+                    <span class="pkg-panel-kw" id="panelKw">3.6 kW system</span>
                   </div>
-                  <button type="button" class="pkg-panel-btn" id="panelPlus" aria-label="Add panels">
+                  <button type="button" class="pkg-panel-btn" id="panelPlus" aria-label="Larger system">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   </button>
                 </div>
                 <div class="pkg-panel-range">
-                  <span>4 panels</span>
-                  <span>14 panels</span>
+                  <span>1.8 kW</span>
+                  <span>6.4 kW</span>
                 </div>
               </div>
 

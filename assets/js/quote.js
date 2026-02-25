@@ -664,7 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showCalculatorResult(result) {
     document.getElementById('resultPanels').textContent =
-      `${result.panels} panels (${result.systemKw} kW system)`;
+      `${result.systemKw} kW system`;
     document.getElementById('resultUsage').textContent =
       `${result.annualKwh.toLocaleString()} kWh`;
     document.getElementById('resultGeneration').textContent =
