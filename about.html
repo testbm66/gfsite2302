@@ -51,220 +51,229 @@
   </div>
 
   <main>
-    <!-- Hero -->
-    <section class="about-hero">
-      <div class="about-hero__bg">
-        <img src="assets/img/about-hero.jpg" alt="" onerror="this.parentElement.style.background='linear-gradient(135deg, var(--color-green-dark) 0%, #1a5c3a 100%)'">
+    <!-- Hero — same pattern as services hero -->
+    <section class="svc-hero">
+      <div class="svc-hero__bg">
+        <img src="assets/img/about-hero.jpg" alt="" onerror="this.parentElement.style.display='none'">
       </div>
-      <div class="container about-hero__inner">
-        <span class="section-tag section-tag--light">About Us</span>
-        <h1 class="about-hero__title">People-centric solar,<br>from <span>Scotland</span></h1>
-        <p class="about-hero__subtitle">GreenFox Energy was founded with a simple mission: to make solar energy accessible, understandable, and genuinely helpful for Scottish homeowners.</p>
-        <div class="about-hero__stats">
-          <div class="about-hero__stat">
-            <span class="about-hero__stat-number">2019</span>
-            <span class="about-hero__stat-label">Founded</span>
-          </div>
-          <div class="about-hero__stat">
-            <span class="about-hero__stat-number">4.7★</span>
-            <span class="about-hero__stat-label">Trustpilot</span>
-          </div>
-          <div class="about-hero__stat">
-            <span class="about-hero__stat-number">8+</span>
-            <span class="about-hero__stat-label">Accreditations</span>
-          </div>
-          <div class="about-hero__stat">
-            <span class="about-hero__stat-number">100%</span>
-            <span class="about-hero__stat-label">In-house team</span>
+      <div class="container svc-hero__inner">
+        <div class="svc-hero__content">
+          <span class="section-tag">About Us</span>
+          <h1 class="svc-hero__title">People-centric solar, from <span>Scotland</span></h1>
+          <p class="svc-hero__subtitle">GreenFox Energy was founded with a simple mission: to make solar energy accessible, understandable, and genuinely helpful for Scottish homeowners. No jargon, no hard sell &mdash; just honest advice and quality installations.</p>
+          <div class="svc-hero__trust">
+            <span>Founded 2019</span>
+            <span>4.7&#9733; Trustpilot</span>
+            <span>100% In-House Team</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Story — Bento Grid -->
-    <section class="about-story">
+    <!-- Story — split layout like services page -->
+    <section class="svc-section" id="story">
       <div class="container">
-        <div class="bento">
-          <div class="bento__main">
+        <div class="svc-split">
+          <div class="svc-split__text">
             <span class="section-tag">Our Story</span>
-            <h2 class="section-title">Built on trust,<br>driven by quality</h2>
+            <h2 class="section-title">Built on trust, driven by quality</h2>
             <p>Founded in 2019, GreenFox Energy grew from a shared frustration with the solar industry. Too many companies were offering one-size-fits-all solutions, confusing customers with technical jargon, and disappearing after installation.</p>
             <p>We set out to do things differently. Every home gets a proper survey. Every customer gets plain-English advice. Every system is designed specifically for that household's needs. And every installation is carried out by our own in-house team &mdash; never subcontracted.</p>
+            <p>Today, we're one of Scotland's most trusted solar companies, with a 4.7-star Trustpilot rating and accreditations from MCS, Which?, RECC, and Trustmark. But what we're most proud of is the relationships we've built with our customers.</p>
           </div>
-          <div class="bento__card bento__card--dark">
-            <div class="bento__card-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div class="svc-split__visual">
+            <div class="svc-split__img">
+              <img src="assets/img/gfcar.jpeg" alt="GreenFox Energy branded car">
             </div>
-            <h3>Never subcontracted</h3>
-            <p>Every install is done by our own trained, MCS-certified team.</p>
-          </div>
-          <div class="bento__card bento__card--green">
-            <div class="bento__card-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <div class="svc-split__stat">
+              <div class="svc-split__stat-item">
+                <div class="svc-split__stat-number">8+</div>
+                <div class="svc-split__stat-label">Industry accreditations</div>
+              </div>
+              <div class="svc-split__stat-item">
+                <div class="svc-split__stat-number">4.7&#9733;</div>
+                <div class="svc-split__stat-label">Trustpilot rating</div>
+              </div>
             </div>
-            <h3>Relationships, not transactions</h3>
-            <p>From day one to year twenty-five, we're here for you.</p>
-          </div>
-          <div class="bento__image">
-            <img src="assets/img/gfcar.jpeg" alt="GreenFox Energy branded car">
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Mission -->
-    <section class="about-mission">
+    <!-- Values — clean white cards -->
+    <section class="svc-section svc-section--alt" id="values">
       <div class="container">
-        <div class="about-mission__inner">
-          <div class="about-mission__quote">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" opacity="0.15"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z"/></svg>
-            <blockquote>
-              <p>We believe solar should be simple. No jargon, no hard sell, no hidden costs. Just honest advice and quality work from people who genuinely care.</p>
-            </blockquote>
-            <cite>&mdash; The GreenFox Team</cite>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Values — Offset Cards -->
-    <section class="about-values">
-      <div class="container">
-        <div class="section-header section-header--center">
+        <div class="svc-section__header">
           <span class="section-tag">Our Values</span>
           <h2 class="section-title">What drives everything we do</h2>
         </div>
-        <div class="values-offset">
-          <div class="values-offset__card">
-            <div class="values-offset__number">01</div>
-            <div class="values-offset__icon">
+        <div class="about-values-grid">
+          <div class="about-value-card">
+            <div class="about-value-card__icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <h3>People-centric</h3>
             <p>Clear, jargon-free advice from real people who care about your home and your energy bills.</p>
           </div>
-          <div class="values-offset__card values-offset__card--raised">
-            <div class="values-offset__number">02</div>
-            <div class="values-offset__icon">
+          <div class="about-value-card">
+            <div class="about-value-card__icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
             </div>
             <h3>Quality-first</h3>
-            <p>In-house teams, premium components, and impeccable installation standards on every job.</p>
+            <p>In-house teams, premium components, and impeccable installation standards on every single job.</p>
           </div>
-          <div class="values-offset__card">
-            <div class="values-offset__number">03</div>
-            <div class="values-offset__icon">
+          <div class="about-value-card">
+            <div class="about-value-card__icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <h3>Transparent pricing</h3>
             <p>The price we quote is the price you pay. No hidden costs, no surprises, ever.</p>
           </div>
-          <div class="values-offset__card values-offset__card--raised">
-            <div class="values-offset__number">04</div>
-            <div class="values-offset__icon">
+          <div class="about-value-card">
+            <div class="about-value-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <h3>Never subcontracted</h3>
+            <p>Every install is done by our own trained, MCS-certified team. Your home, our responsibility.</p>
+          </div>
+          <div class="about-value-card">
+            <div class="about-value-card__icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </div>
             <h3>No hard sell</h3>
             <p>No pressure, no inflated promises. Just honest solutions that actually work for you.</p>
           </div>
+          <div class="about-value-card">
+            <div class="about-value-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3>Ongoing partnership</h3>
+            <p>With you from day one to year twenty-five. Installation is just the beginning.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Team — Visual Cards -->
-    <section class="about-team">
+    <!-- Promise — styled like the services split but reversed -->
+    <section class="svc-section">
       <div class="container">
-        <div class="section-header section-header--center">
+        <div class="svc-split" style="direction: rtl;">
+          <div class="svc-split__text" style="direction: ltr;">
+            <span class="section-tag">Our Promise</span>
+            <h2 class="section-title">Relationships, not transactions</h2>
+            <p>Unlike many installers, we don't disappear after the panels go up. We monitor your system, optimise its performance, and stay with you for the long haul.</p>
+            <ul class="check-list">
+              <li>Free home survey &amp; energy assessment</li>
+              <li>Plain-English advice, no technical jargon</li>
+              <li>Own in-house installation team</li>
+              <li>2-year Insurance Backed Guarantee</li>
+              <li>Ongoing monitoring &amp; aftercare</li>
+              <li>Vixen Care Plan for long-term support</li>
+            </ul>
+            <a href="quote.html" class="btn btn--primary btn--lg">Get Free Quote</a>
+          </div>
+          <div class="svc-split__visual" style="direction: ltr;">
+            <div class="svc-split__img">
+              <img src="assets/img/about-promise.jpg" alt="GreenFox team at work" onerror="this.outerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;\'><img src=\'assets/img/GFfaceonICON.png\' alt=\'GreenFox\' style=\'max-width:120px;opacity:0.3;\'></div>'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="svc-section svc-section--alt" id="team">
+      <div class="container">
+        <div class="svc-section__header">
           <span class="section-tag">The Team</span>
           <h2 class="section-title">The people behind GreenFox</h2>
-          <p class="section-subtitle">A small, dedicated team who genuinely care about getting your solar solution right.</p>
+          <p>A small, dedicated team who genuinely care about getting your solar solution right.</p>
         </div>
-
-        <div class="team-showcase">
-          <div class="team-showcase__card">
-            <div class="team-showcase__photo">
+        <div class="about-team-grid">
+          <div class="about-team-card">
+            <div class="about-team-card__photo">
               <img src="assets/img/team-1.jpg" alt="Team Member" onerror="this.style.display='none'">
-              <div class="team-showcase__photo-placeholder">
+              <div class="about-team-card__placeholder">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </div>
             </div>
-            <div class="team-showcase__info">
+            <div class="about-team-card__info">
               <h3>Team Member</h3>
-              <span class="team-showcase__role">Director</span>
+              <span>Director</span>
             </div>
           </div>
-          <div class="team-showcase__card">
-            <div class="team-showcase__photo">
+          <div class="about-team-card">
+            <div class="about-team-card__photo">
               <img src="assets/img/team-2.jpg" alt="Team Member" onerror="this.style.display='none'">
-              <div class="team-showcase__photo-placeholder">
+              <div class="about-team-card__placeholder">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </div>
             </div>
-            <div class="team-showcase__info">
+            <div class="about-team-card__info">
               <h3>Team Member</h3>
-              <span class="team-showcase__role">Operations Manager</span>
+              <span>Operations Manager</span>
             </div>
           </div>
-          <div class="team-showcase__card">
-            <div class="team-showcase__photo">
+          <div class="about-team-card">
+            <div class="about-team-card__photo">
               <img src="assets/img/team-3.jpg" alt="Team Member" onerror="this.style.display='none'">
-              <div class="team-showcase__photo-placeholder">
+              <div class="about-team-card__placeholder">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </div>
             </div>
-            <div class="team-showcase__info">
+            <div class="about-team-card__info">
               <h3>Team Member</h3>
-              <span class="team-showcase__role">Lead Installer</span>
+              <span>Lead Installer</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Milestones Timeline -->
-    <section class="about-timeline">
+    <!-- Journey Timeline -->
+    <section class="svc-section">
       <div class="container">
-        <div class="section-header section-header--center">
+        <div class="svc-section__header">
           <span class="section-tag">Our Journey</span>
           <h2 class="section-title">Growing with Scotland</h2>
         </div>
-        <div class="timeline">
-          <div class="timeline__item">
-            <div class="timeline__marker"></div>
-            <div class="timeline__content">
-              <span class="timeline__year">2019</span>
+        <div class="about-timeline">
+          <div class="about-timeline__item">
+            <div class="about-timeline__marker"></div>
+            <div class="about-timeline__card">
+              <span class="about-timeline__year">2019</span>
               <h3>GreenFox Energy founded</h3>
               <p>Started with a mission to bring honest, quality solar to Scottish homeowners.</p>
             </div>
           </div>
-          <div class="timeline__item">
-            <div class="timeline__marker"></div>
-            <div class="timeline__content">
-              <span class="timeline__year">2020</span>
+          <div class="about-timeline__item">
+            <div class="about-timeline__marker"></div>
+            <div class="about-timeline__card">
+              <span class="about-timeline__year">2020</span>
               <h3>MCS Certification achieved</h3>
               <p>Gained the industry's gold-standard accreditation for renewable energy installations.</p>
             </div>
           </div>
-          <div class="timeline__item">
-            <div class="timeline__marker"></div>
-            <div class="timeline__content">
-              <span class="timeline__year">2022</span>
+          <div class="about-timeline__item">
+            <div class="about-timeline__marker"></div>
+            <div class="about-timeline__card">
+              <span class="about-timeline__year">2022</span>
               <h3>Tesla Powerwall Certified</h3>
               <p>Became an approved installer for the world's leading home battery system.</p>
             </div>
           </div>
-          <div class="timeline__item">
-            <div class="timeline__marker"></div>
-            <div class="timeline__content">
-              <span class="timeline__year">2023</span>
+          <div class="about-timeline__item">
+            <div class="about-timeline__marker"></div>
+            <div class="about-timeline__card">
+              <span class="about-timeline__year">2023</span>
               <h3>Which? Trusted Trader</h3>
               <p>Independently assessed and recognised for outstanding customer service.</p>
             </div>
           </div>
-          <div class="timeline__item">
-            <div class="timeline__marker"></div>
-            <div class="timeline__content">
-              <span class="timeline__year">2025</span>
+          <div class="about-timeline__item">
+            <div class="about-timeline__marker"></div>
+            <div class="about-timeline__card">
+              <span class="about-timeline__year">2025</span>
               <h3>Scotland-wide coverage</h3>
               <p>Expanded operations to serve homeowners across all of Scotland.</p>
             </div>
