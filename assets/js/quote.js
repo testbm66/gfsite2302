@@ -921,7 +921,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const kw      = ((packageState.panels * PRICING.panelWattage) / 1000).toFixed(1);
 
     let linesHtml = '';
-    linesHtml += `<div class="order-summary__line"><span>${packageState.panels} x Solar Panels (${kw} kW)</span><span>${fmtGBP(packageState.panels * PRICING.panelUnitPrice)}</span></div>`;
+    linesHtml += `<div class="order-summary__line"><span>Solar System (${kw} kW)</span><span>${fmtGBP(packageState.panels * PRICING.panelUnitPrice)}</span></div>`;
 
     if (packageState.battery !== 'none') {
       const b = PRICING.batteries[packageState.battery];
@@ -978,7 +978,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let html = '<h3>Order confirmation</h3><dl>';
     html += `<dt>Reference</dt><dd>${ref}</dd>`;
-    html += `<dt>System</dt><dd>${packageState.panels} panels (${kw} kW)</dd>`;
+    html += `<dt>System</dt><dd>${kw} kW solar system</dd>`;
     if (packageState.battery !== 'none') {
       html += `<dt>Battery</dt><dd>${PRICING.batteries[packageState.battery].label}</dd>`;
     }
