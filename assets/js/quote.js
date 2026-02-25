@@ -581,15 +581,23 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const hubspotResult = await submitToHubSpot(formData);
       
+      const isExistingOwner = formData.solarStatus === 'yes-working' || formData.solarStatus === 'yes-unsure';
+
       if (hubspotResult.success) {
         if (paymentStatus === 'deposit_paid') {
           showPaymentSuccess();
+        } else if (isExistingOwner) {
+          window.location.href = 'vixen-care-plan.html';
+          return;
         } else {
           showSuccess();
         }
       } else if (HUBSPOT_CONFIG.portalId === 'YOUR_PORTAL_ID') {
         if (paymentStatus === 'deposit_paid') {
           showPaymentSuccess();
+        } else if (isExistingOwner) {
+          window.location.href = 'vixen-care-plan.html';
+          return;
         } else {
           showSuccess();
         }
@@ -699,7 +707,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (useRecommendationBtn) {
     useRecommendationBtn.addEventListener('click', () => {
       if (calculatedSystemSize) {
-        formData.systemSize = calculatedSystemSize;
         formData.monthlyBill = monthlyBillInput.value;
         goToNextStep();
       }
@@ -849,7 +856,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function initPackageFromQuiz() {
-    const size = formData.systemSize || calculatedSystemSize;
+    let size = formData.systemSize;
+    if (size === 'unsure') size = calculatedSystemSize;
+    size = size || calculatedSystemSize;
     if (size === 'small')       packageState.panels = 6;
     else if (size === 'medium') packageState.panels = 10;
     else if (size === 'large')  packageState.panels = 14;
