@@ -2561,43 +2561,28 @@ svg.footer__logo-icon {
 ================================ */
 .vcp-hero {
   padding: var(--space-4xl) 0 var(--space-3xl);
-  background: linear-gradient(135deg, #1a3a2a 0%, #2E8B57 100%);
+  background: linear-gradient(135deg, var(--color-green-bg) 0%, var(--color-white) 100%);
   text-align: center;
-  color: var(--color-white);
-  position: relative;
-  overflow: hidden;
-}
-
-.vcp-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.08) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.vcp-hero .section-tag {
-  background: rgba(255,255,255,0.15);
-  color: var(--color-white);
 }
 
 .vcp-hero__title {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
+  color: var(--color-dark);
   letter-spacing: -0.02em;
   margin-bottom: var(--space-lg);
   line-height: 1.15;
 }
 
 .vcp-hero__title span {
-  color: var(--color-orange);
+  color: var(--color-green);
 }
 
 .vcp-hero__subtitle {
   font-size: 1.15rem;
-  color: rgba(255,255,255,0.85);
+  color: var(--color-gray-500);
   max-width: 700px;
-  margin: 0 auto var(--space-xl);
+  margin: 0 auto;
   line-height: 1.8;
 }
 
@@ -2615,19 +2600,11 @@ svg.footer__logo-icon {
   gap: var(--space-xs);
   font-size: 0.9rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.9);
+  color: var(--color-dark);
 }
 
 .vcp-hero__trust-item svg {
-  color: var(--color-orange);
-}
-
-.vcp-hero__actions {
-  display: flex;
-  gap: var(--space-md);
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: var(--space-xl);
+  color: var(--color-green);
 }
 
 @media (max-width: 640px) {
