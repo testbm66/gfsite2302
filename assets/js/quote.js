@@ -43,7 +43,7 @@ const PRICING = {
   panelUnitPrice: 400,
   panelMin: 4,
   panelMax: 14,
-  panelWattage: 430,
+  panelWattage: 455,
   batteries: {
     none:      { label: 'No battery',        price: 0    },
     duracell:  { label: 'Duracell 5 kWh',    price: 2500 },
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const CALC_CONFIG = {
     ratePerKwh: 0.28,
     panelOutputPerYear: 350,
-    panelWattage: 430,
+    panelWattage: 455,
     selfConsumptionRate: 0.50,
     exportRate: 0.15,
   };
