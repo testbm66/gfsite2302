@@ -1130,6 +1130,111 @@ a:hover {
   margin-left: 1rem;
 }
 
+/* Battery Quantity Cards */
+.pkg-batteries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pkg-battery-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.pkg-battery-card:hover {
+  border-color: var(--color-gray-300);
+}
+
+.pkg-battery-card.is-active {
+  border-color: var(--color-green);
+  background: var(--color-green-pale);
+  box-shadow: 0 0 0 1px var(--color-green);
+}
+
+.pkg-battery-card__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.pkg-battery-card__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-gray-900);
+}
+
+.pkg-battery-card__desc {
+  font-size: 0.8rem;
+  color: var(--color-gray-500);
+  margin-top: 0.1rem;
+}
+
+.pkg-battery-card__qty {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.pkg-qty-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--color-gray-300);
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-gray-700);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pkg-qty-btn:hover {
+  border-color: var(--color-green);
+  color: var(--color-green);
+  box-shadow: var(--shadow-sm);
+}
+
+.pkg-qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pkg-battery-card__count {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.pkg-battery-card.is-active .pkg-battery-card__count {
+  color: var(--color-green-dark);
+}
+
+.pkg-battery-card__price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  white-space: nowrap;
+  min-width: 5.5rem;
+  text-align: right;
+}
+
+.pkg-battery-card.is-active .pkg-battery-card__price {
+  color: var(--color-green-dark);
+}
+
 /* Pricing Summary */
 .pkg-pricing {
   background: var(--color-gray-900);
@@ -1659,6 +1764,20 @@ a:hover {
   }
   .pkg-section {
     padding: 1rem;
+  }
+  .pkg-battery-card {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .pkg-battery-card__info {
+    flex: 1 1 100%;
+  }
+  .pkg-battery-card__qty {
+    margin-left: 0;
+  }
+  .pkg-battery-card__price {
+    min-width: auto;
+    margin-left: auto;
   }
   .pkg-panel-selector {
     gap: 1.25rem;

@@ -803,9 +803,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   const packageState = {
     panels: 8,
-    battery: 'none',
+    batteries: { duracell: 0, sigenergy: 0, tesla: 0 },
     addons: [],
   };
+  const BATTERY_MAX_QTY = 4;
 
   const pkgPanelCount   = document.getElementById('panelCount');
   const pkgPanelKw      = document.getElementById('panelKw');
@@ -824,7 +825,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function calcPackageTotal() {
     let total = packageState.panels * PRICING.panelUnitPrice;
-    total += PRICING.batteries[packageState.battery]?.price || 0;
+    for (const [key, qty] of Object.entries(packageState.batteries)) {
+      total += (PRICING.batteries[key]?.price || 0) * qty;
+    }
     packageState.addons.forEach(a => { total += PRICING.addons[a]?.price || 0; });
     return total;
   }
@@ -844,6 +847,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (panelMinusBtn) panelMinusBtn.disabled = packageState.panels <= PRICING.panelMin;
     if (panelPlusBtn)  panelPlusBtn.disabled  = packageState.panels >= PRICING.panelMax;
+
+    for (const [key, qty] of Object.entries(packageState.batteries)) {
+      const countEl = document.querySelector(`[data-battery-count="${key}"]`);
+      const priceEl = document.querySelector(`[data-battery-price="${key}"]`);
+      const card    = document.querySelector(`.pkg-battery-card[data-battery="${key}"]`);
+      const minusBtn = document.querySelector(`[data-battery-action="minus"][data-battery-key="${key}"]`);
+      if (countEl) countEl.textContent = qty;
+      if (priceEl) {
+        const unitPrice = PRICING.batteries[key]?.price || 0;
+        priceEl.textContent = qty > 0
+          ? fmtGBP(unitPrice * qty)
+          : fmtGBP(unitPrice) + ' each';
+      }
+      if (card) card.classList.toggle('is-active', qty > 0);
+      if (minusBtn) minusBtn.disabled = qty <= 0;
+    }
 
     if (pkgSavings && formData.monthlyBill) {
       const annualGen = packageState.panels * CALC_CONFIG.panelOutputPerYear;
@@ -865,14 +884,9 @@ document.addEventListener('DOMContentLoaded', () => {
     else                        packageState.panels = 8;
 
     const batteryInterest = formData.battery;
+    packageState.batteries = { duracell: 0, sigenergy: 0, tesla: 0 };
     if (batteryInterest === 'yes' || batteryInterest === 'maybe') {
-      packageState.battery = 'duracell';
-      const duracellRadio = form.querySelector('input[name="pkgBattery"][value="duracell"]');
-      if (duracellRadio) duracellRadio.checked = true;
-    } else {
-      packageState.battery = 'none';
-      const noneRadio = form.querySelector('input[name="pkgBattery"][value="none"]');
-      if (noneRadio) noneRadio.checked = true;
+      packageState.batteries.duracell = 1;
     }
     packageState.addons = [];
     form.querySelectorAll('.pkg-addon input[type="checkbox"]').forEach(cb => { cb.checked = false; });
@@ -891,11 +905,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  form.addEventListener('change', (e) => {
-    if (e.target.name === 'pkgBattery') {
-      packageState.battery = e.target.value;
-      updatePackageUI();
+  form.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-battery-action]');
+    if (btn) {
+      const key = btn.dataset.batteryKey;
+      const action = btn.dataset.batteryAction;
+      if (action === 'plus' && packageState.batteries[key] < BATTERY_MAX_QTY) {
+        packageState.batteries[key]++;
+        updatePackageUI();
+      } else if (action === 'minus' && packageState.batteries[key] > 0) {
+        packageState.batteries[key]--;
+        updatePackageUI();
+      }
     }
+  });
+
+  form.addEventListener('change', (e) => {
     if (e.target.closest && e.target.closest('.pkg-addon')) {
       packageState.addons = Array.from(form.querySelectorAll('.pkg-addon input:checked')).map(cb => cb.value);
       updatePackageUI();
@@ -923,9 +948,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let linesHtml = '';
     linesHtml += `<div class="order-summary__line"><span>Solar System (${kw} kW)</span><span>${fmtGBP(packageState.panels * PRICING.panelUnitPrice)}</span></div>`;
 
-    if (packageState.battery !== 'none') {
-      const b = PRICING.batteries[packageState.battery];
-      linesHtml += `<div class="order-summary__line"><span>${b.label}</span><span>${fmtGBP(b.price)}</span></div>`;
+    for (const [key, qty] of Object.entries(packageState.batteries)) {
+      if (qty > 0) {
+        const b = PRICING.batteries[key];
+        const label = qty > 1 ? `${qty} &times; ${b.label}` : b.label;
+        linesHtml += `<div class="order-summary__line"><span>${label}</span><span>${fmtGBP(b.price * qty)}</span></div>`;
+      }
     }
 
     packageState.addons.forEach(a => {
@@ -979,8 +1007,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let html = '<h3>Order confirmation</h3><dl>';
     html += `<dt>Reference</dt><dd>${ref}</dd>`;
     html += `<dt>System</dt><dd>${kw} kW solar system</dd>`;
-    if (packageState.battery !== 'none') {
-      html += `<dt>Battery</dt><dd>${PRICING.batteries[packageState.battery].label}</dd>`;
+    for (const [key, qty] of Object.entries(packageState.batteries)) {
+      if (qty > 0) {
+        const label = qty > 1 ? `${qty} &times; ${PRICING.batteries[key].label}` : PRICING.batteries[key].label;
+        html += `<dt>Battery</dt><dd>${label}</dd>`;
+      }
     }
     packageState.addons.forEach(a => {
       const ad = PRICING.addons[a];
@@ -1051,7 +1082,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   form.addEventListener('change', (e) => {
     if (e.target.type === 'radio') {
-      if (e.target.name === 'pkgBattery') return;
       collectStepData();
       setTimeout(() => { goToNextStep(); }, 300);
     }
@@ -1099,7 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isSubmitting = true;
 
       formData._packagePanels   = packageState.panels;
-      formData._packageBattery  = packageState.battery;
+      formData._packageBattery  = Object.entries(packageState.batteries).filter(([,q]) => q > 0).map(([k,q]) => `${q}x ${PRICING.batteries[k].label}`).join(', ') || 'None';
       formData._packageAddons   = packageState.addons.join(', ');
       formData._packageTotal    = calcPackageTotal();
       formData._depositAmount   = Math.round(calcPackageTotal() * PRICING.depositRate * 100) / 100;
@@ -1127,7 +1157,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isSubmitting = true;
 
       formData._packagePanels   = packageState.panels;
-      formData._packageBattery  = packageState.battery;
+      formData._packageBattery  = Object.entries(packageState.batteries).filter(([,q]) => q > 0).map(([k,q]) => `${q}x ${PRICING.batteries[k].label}`).join(', ') || 'None';
       formData._packageAddons   = packageState.addons.join(', ');
       formData._packageTotal    = calcPackageTotal();
       formData._depositAmount   = 0;
@@ -1149,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isSubmitting = true;
 
       formData._packagePanels   = packageState.panels;
-      formData._packageBattery  = packageState.battery;
+      formData._packageBattery  = Object.entries(packageState.batteries).filter(([,q]) => q > 0).map(([k,q]) => `${q}x ${PRICING.batteries[k].label}`).join(', ') || 'None';
       formData._packageAddons   = packageState.addons.join(', ');
       formData._packageTotal    = calcPackageTotal();
       formData._depositAmount   = 0;
