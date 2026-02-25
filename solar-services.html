@@ -54,128 +54,150 @@
   </div>
 
   <main>
-    <!-- Hero -->
-    <section class="page-hero">
-      <div class="container">
-        <span class="section-tag">Our Services</span>
-        <h1 class="page-hero__title">Solar solutions for every home</h1>
-        <p class="page-hero__subtitle">From brand new installations to battery storage and ongoing maintenance, GreenFox has you covered with MCS-certified, quality-first solar services across Scotland.</p>
-        <div class="page-hero__trust">
-          <span>MCS Certified</span>
-          <span>Which? Trusted Trader</span>
-          <span>Tesla Powerwall Certified</span>
-        </div>
+    <!-- Hero — matches homepage style, background image slot -->
+    <section class="svc-hero">
+      <div class="svc-hero__bg">
+        <img src="assets/img/gfvanlanding.jpeg" alt="">
       </div>
-    </section>
-
-    <!-- Solar Panel Installation -->
-    <section class="content-section" id="installation">
-      <div class="container">
-        <div class="content-split">
-          <div class="content-split__text">
-            <span class="section-tag">Most Popular</span>
-            <h2 class="section-title">Solar Panel Installation</h2>
-            <p>We design and install bespoke solar panel systems tailored to your home, energy usage, and budget. Every installation is carried out by our own MCS-certified team -- never subcontracted, always quality-assured.</p>
-            <ul class="check-list">
-              <li>Free home survey and energy assessment</li>
-              <li>Custom system design using premium panels</li>
-              <li>Full installation in 2-4 days with minimal disruption</li>
-              <li>All paperwork, DNO registration, and grid export setup handled</li>
-              <li>2-year Insurance Backed Guarantee included</li>
-              <li>Ongoing monitoring and aftercare support</li>
-            </ul>
-            <p>Most of our customers see their energy bills drop by 50-70% and recoup their investment within 6-8 years, all while reducing their carbon footprint.</p>
-            <div class="content-split__actions">
-              <a href="quote.html" class="btn btn--primary btn--lg">Get Your Free Quote</a>
-            </div>
+      <div class="container svc-hero__inner">
+        <div class="svc-hero__content">
+          <span class="section-tag">Our Services</span>
+          <h1 class="svc-hero__title">Solar solutions for <span>every home</span></h1>
+          <p class="svc-hero__subtitle">From brand new installations to battery storage and ongoing maintenance, GreenFox has you covered with MCS-certified, quality-first solar services across Scotland.</p>
+          <div class="svc-hero__actions">
+            <a href="quote.html" class="btn btn--primary btn--lg">Free Solar Assessment
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="solar-healthcheck.html" class="btn btn--outline btn--lg">&pound;99 Solar Health-Check</a>
           </div>
-          <div class="content-split__visual">
-            <div class="stat-card">
-              <div class="stat-card__number">50-70%</div>
-              <div class="stat-card__label">Typical bill reduction</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-card__number">2-4 days</div>
-              <div class="stat-card__label">Average installation time</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-card__number">25+ years</div>
-              <div class="stat-card__label">Panel lifespan</div>
-            </div>
+          <div class="svc-hero__trust">
+            <span>MCS Certified</span>
+            <span>Which? Trusted Trader</span>
+            <span>Tesla Powerwall Certified</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Battery Storage -->
-    <section class="content-section content-section--alt" id="battery">
+    <!-- SECTION 1: Solar Installation + Battery Storage -->
+    <section class="svc-section" id="installation">
       <div class="container">
-        <div class="content-split content-split--reverse">
-          <div class="content-split__text">
-            <span class="section-tag">Energy Independence</span>
-            <h2 class="section-title">Battery Storage</h2>
-            <p>Store the solar energy you generate during the day and use it at night. Battery storage maximises your self-consumption, reduces reliance on the grid, and keeps your home powered during outages.</p>
-            <p>As certified installers for both Tesla Powerwall and Duracell Energy, we offer industry-leading battery solutions designed to integrate seamlessly with your solar system.</p>
-            <ul class="check-list">
-              <li>Tesla Powerwall -- 13.5 kWh capacity, backup gateway included</li>
-              <li>Duracell Energy -- modular design, scalable from 5 kWh</li>
-              <li>Smart time-of-use tariff integration (Octopus, etc.)</li>
-              <li>Retrofit to existing solar or install alongside new panels</li>
-              <li>Real-time monitoring via smartphone app</li>
-            </ul>
-            <div class="content-split__actions">
-              <a href="quote.html" class="btn btn--primary btn--lg">Get Battery Quote</a>
+        <div class="svc-section__header">
+          <span class="section-tag">Go Solar</span>
+          <h2 class="section-title">Installation &amp; storage</h2>
+        </div>
+        <div class="svc-pair">
+          <!-- Solar Panel Installation -->
+          <div class="svc-card svc-card--primary">
+            <div class="svc-card__badge">Most Popular</div>
+            <img src="assets/img/services-solar.jpg" alt="Solar panel installation" class="svc-card__img" onerror="this.outerHTML='<div class=\'svc-card__img-slot\'><svg width=\'64\' height=\'64\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><circle cx=\'12\' cy=\'12\' r=\'5\'/><line x1=\'12\' y1=\'1\' x2=\'12\' y2=\'3\'/><line x1=\'12\' y1=\'21\' x2=\'12\' y2=\'23\'/><line x1=\'4.22\' y1=\'4.22\' x2=\'5.64\' y2=\'5.64\'/><line x1=\'18.36\' y1=\'18.36\' x2=\'19.78\' y2=\'19.78\'/><line x1=\'1\' y1=\'12\' x2=\'3\' y2=\'12\'/><line x1=\'21\' y1=\'12\' x2=\'23\' y2=\'12\'/></svg></div>'">
+            <div class="svc-card__body">
+              <div class="svc-card__icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+              </div>
+              <h3 class="svc-card__title">Solar Panel Installation</h3>
+              <p class="svc-card__desc">Complete solar installation service. We design, supply, install and manage everything &mdash; no expertise required on your part.</p>
+              <ul class="svc-card__list">
+                <li>Free home survey &amp; energy assessment</li>
+                <li>Custom system design, premium panels</li>
+                <li>Full install in 2-4 days</li>
+                <li>All paperwork &amp; DNO registration handled</li>
+                <li>2-year Insurance Backed Guarantee</li>
+                <li>Ongoing monitoring &amp; aftercare</li>
+              </ul>
+              <div class="svc-card__footer">
+                <a href="quote.html" class="btn btn--white">Get Free Quote</a>
+              </div>
             </div>
           </div>
-          <div class="content-split__visual">
-            <div class="partner-logos">
-              <img src="assets/img/Tesla-Powerwall-CG10-1.webp" alt="Tesla Powerwall Certified">
-              <img src="assets/img/Duracell-Banner-1.webp" alt="Duracell Energy">
+
+          <!-- Battery Storage -->
+          <div class="svc-card svc-card--green" id="battery">
+            <img src="assets/img/services-battery.jpg" alt="Battery storage" class="svc-card__img" onerror="this.outerHTML='<div class=\'svc-card__img-slot\'><svg width=\'64\' height=\'64\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'2\' y=\'7\' width=\'20\' height=\'10\' rx=\'1\'/><path d=\'M6 7V5a2 2 0 012-2h8a2 2 0 012 2v2\'/></svg></div>'">
+            <div class="svc-card__body">
+              <div class="svc-card__icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="10" rx="1"/><path d="M6 7V5a2 2 0 012-2h8a2 2 0 012 2v2"/></svg>
+              </div>
+              <h3 class="svc-card__title">Battery Storage</h3>
+              <p class="svc-card__desc">Store solar energy during the day and use it at night. Maximise self-consumption and keep your home powered during outages.</p>
+              <div class="svc-card__partners">
+                <img src="assets/img/Tesla-Powerwall-CG10-1.webp" alt="Tesla Powerwall">
+                <img src="assets/img/Duracell-Banner-1.webp" alt="Duracell Energy">
+              </div>
+              <ul class="svc-card__list">
+                <li>Tesla Powerwall &mdash; 13.5 kWh capacity</li>
+                <li>Duracell Energy &mdash; scalable from 5 kWh</li>
+                <li>Smart tariff integration (Octopus, etc.)</li>
+                <li>Retrofit or install with new panels</li>
+                <li>Real-time monitoring via app</li>
+              </ul>
+              <div class="svc-card__footer">
+                <a href="quote.html" class="btn btn--white">Get Battery Quote</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- EV Charger Installation -->
-    <section class="content-section" id="ev-charger">
+    <!-- SECTION 2: EV Charger Installation (own section, dark bg) -->
+    <section class="svc-section svc-section--dark" id="ev-charger">
       <div class="container">
-        <div class="content-split">
-          <div class="content-split__text">
+        <div class="svc-split">
+          <div class="svc-split__text">
             <span class="section-tag">Complete Home Energy</span>
             <h2 class="section-title">EV Charger Installation</h2>
-            <p>Power your electric vehicle with free energy from your solar panels. We install smart EV chargers that work with your solar system to charge your car using surplus solar generation -- dramatically reducing your running costs.</p>
+            <p>Power your electric vehicle with free energy from your solar panels. We install smart EV chargers that work with your solar system to charge your car using surplus solar generation &mdash; dramatically reducing your running costs.</p>
             <ul class="check-list">
               <li>Smart chargers that prioritise solar surplus</li>
               <li>Compatible with all EV makes and models</li>
               <li>Typical installation in half a day</li>
               <li>OZEV grant guidance where applicable</li>
             </ul>
-            <div class="content-split__actions">
-              <a href="quote.html" class="btn btn--primary btn--lg">Enquire About EV Charging</a>
-            </div>
+            <a href="quote.html" class="btn btn--white btn--lg">Enquire About EV Charging</a>
           </div>
-          <div class="content-split__visual">
-            <div class="stat-card stat-card--highlight">
-              <div class="stat-card__icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div class="svc-split__visual">
+            <div class="svc-split__img">
+              <img src="assets/img/services-ev.jpg" alt="EV charger at home" onerror="this.outerHTML='<svg width=\'80\' height=\'80\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><path d=\'M13 2L3 14h9l-1 8 10-12h-9l1-8z\'/></svg>'">
+            </div>
+            <div class="svc-split__stat">
+              <div class="svc-split__stat-item">
+                <div class="svc-split__stat-number">~2p/mile</div>
+                <div class="svc-split__stat-label">Cost with solar</div>
               </div>
-              <div class="stat-card__number">~2p/mile</div>
-              <div class="stat-card__label">Cost to charge with solar vs 7-10p/mile from the grid</div>
+              <div class="svc-split__stat-item">
+                <div class="svc-split__stat-number">7-10p/mile</div>
+                <div class="svc-split__stat-label">Cost from the grid</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Care & Maintenance -->
-    <section class="content-section content-section--alt" id="maintenance">
+    <!-- SECTION 3: Care & Maintenance (own section, light bg) -->
+    <section class="svc-section svc-section--alt" id="maintenance">
       <div class="container">
-        <div class="content-split content-split--reverse">
-          <div class="content-split__text">
+        <div class="svc-split">
+          <div class="svc-split__visual">
+            <div class="svc-split__img">
+              <img src="assets/img/services-maintenance.jpg" alt="Solar panel maintenance" onerror="this.outerHTML='<svg width=\'80\' height=\'80\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><path d=\'M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z\'/></svg>'">
+            </div>
+            <div class="svc-split__stat">
+              <div class="svc-split__stat-item">
+                <div class="svc-split__stat-number">15-20%</div>
+                <div class="svc-split__stat-label">Efficiency lost from dirty panels</div>
+              </div>
+              <div class="svc-split__stat-item">
+                <div class="svc-split__stat-number">&pound;99</div>
+                <div class="svc-split__stat-label">One-off health-check</div>
+              </div>
+            </div>
+          </div>
+          <div class="svc-split__text">
             <span class="section-tag">Ongoing Support</span>
             <h2 class="section-title">Care &amp; Maintenance</h2>
-            <p>Unlike many installers, we don't disappear after installation. Our ongoing care services ensure your system performs at its best for decades -- whether we installed it or not.</p>
+            <p>Unlike many installers, we don't disappear after installation. Our ongoing care services ensure your system performs at its best for decades &mdash; whether we installed it or not.</p>
             <ul class="check-list">
               <li>Panel cleaning and visual inspection</li>
               <li>Inverter health checks and diagnostics</li>
@@ -183,15 +205,9 @@
               <li>Priority support with our Vixen Care Plan</li>
               <li>&pound;99 one-off health-check available</li>
             </ul>
-            <div class="content-split__actions">
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
               <a href="vixen-care-plan.html" class="btn btn--primary btn--lg">Vixen Care Plan</a>
-              <a href="solar-healthcheck.html" class="btn btn--outline">&pound;99 Health-Check</a>
-            </div>
-          </div>
-          <div class="content-split__visual">
-            <div class="stat-card stat-card--warning">
-              <div class="stat-card__number">15-20%</div>
-              <div class="stat-card__label">Efficiency lost from dirty or unmaintained panels</div>
+              <a href="solar-healthcheck.html" class="btn btn--outline btn--lg">&pound;99 Health-Check</a>
             </div>
           </div>
         </div>

@@ -14,6 +14,18 @@ const HUBSPOT_CONFIG = {
 };
 
 // ============================================
+// MAPBOX CONFIGURATION
+// Create a free account at mapbox.com and paste your public token below.
+// Tokens are safe for client-side use when restricted by domain.
+// ============================================
+const MAPBOX_CONFIG = {
+  accessToken: 'YOUR_MAPBOX_TOKEN',  // e.g., 'pk.eyJ1Ijoi...'
+  style: 'mapbox://styles/mapbox/satellite-streets-v12',
+  defaultZoom: 17,
+  defaultCenter: [-3.19, 55.95],     // Scotland fallback (Edinburgh)
+};
+
+// ============================================
 // STRIPE CONFIGURATION
 // Set publishableKey and priceId to enable live payments.
 // Leave as-is to use fallback "quote only" mode.
@@ -164,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (stepId === 'package') {
       initPackageFromQuiz();
+      initInstallMap();
     }
     if (stepId === 'order-summary') {
       populateOrderSummary();
@@ -407,6 +420,8 @@ document.addEventListener('DOMContentLoaded', () => {
       supportType: 'support_type_needed',
       monthlyBill: 'monthly_electricity_bill',
       notes: 'message',
+      installLat:      'install_latitude',
+      installLng:      'install_longitude',
       _packagePanels:  'package_panels',
       _packageBattery: 'package_battery',
       _packageAddons:  'package_addons',
@@ -692,6 +707,91 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
+  // SATELLITE MAP — Step 8b
+  // ============================================
+  let installMap = null;
+  let installMarker = null;
+
+  async function geocodePostcode(postcode) {
+    const token = MAPBOX_CONFIG.accessToken;
+    if (!token || token === 'YOUR_MAPBOX_TOKEN') {
+      console.warn('Mapbox not configured — using default coordinates');
+      return MAPBOX_CONFIG.defaultCenter;
+    }
+    const query = encodeURIComponent(postcode + ', United Kingdom');
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${token}&country=GB&types=postcode,locality&limit=1`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.features && data.features.length > 0) {
+        return data.features[0].center; // [lng, lat]
+      }
+    } catch (err) {
+      console.error('Geocoding failed:', err);
+    }
+    return MAPBOX_CONFIG.defaultCenter;
+  }
+
+  async function initInstallMap() {
+    const container = document.getElementById('install-map');
+    if (!container) return;
+
+    const postcode = formData.postcode || '';
+    const coords = await geocodePostcode(postcode);
+
+    if (typeof mapboxgl === 'undefined') {
+      console.error('Mapbox GL JS not loaded');
+      container.innerHTML = '<p style="padding:2rem;text-align:center;color:#666;">Map could not be loaded. You can continue without it.</p>';
+      return;
+    }
+
+    mapboxgl.accessToken = MAPBOX_CONFIG.accessToken;
+
+    if (installMap) {
+      installMap.remove();
+      installMap = null;
+    }
+
+    installMap = new mapboxgl.Map({
+      container: 'install-map',
+      style: MAPBOX_CONFIG.style,
+      center: coords,
+      zoom: MAPBOX_CONFIG.defaultZoom,
+    });
+
+    installMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    installMarker = new mapboxgl.Marker({ color: '#2E8B57', draggable: true })
+      .setLngLat(coords)
+      .addTo(installMap);
+
+    const coordsDisplay = document.getElementById('mapCoords');
+    function updateCoordsDisplay(lngLat) {
+      if (coordsDisplay) {
+        coordsDisplay.textContent = `${lngLat.lat.toFixed(5)}, ${lngLat.lng.toFixed(5)}`;
+      }
+    }
+    updateCoordsDisplay({ lat: coords[1], lng: coords[0] });
+
+    installMarker.on('dragend', () => {
+      const lngLat = installMarker.getLngLat();
+      updateCoordsDisplay(lngLat);
+    });
+
+    installMap.on('load', () => {
+      installMap.resize();
+    });
+  }
+
+  function captureMapCoords() {
+    if (installMarker) {
+      const lngLat = installMarker.getLngLat();
+      formData.installLat = lngLat.lat.toFixed(6);
+      formData.installLng = lngLat.lng.toFixed(6);
+    }
+  }
+
+  // ============================================
   // PACKAGE CONFIGURATOR
   // ============================================
   const packageState = {
@@ -952,6 +1052,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.matches('[data-action="next"]')) {
       if (validateCurrentStep()) {
         collectStepData();
+        captureMapCoords();
         goToNextStep();
       }
     }
