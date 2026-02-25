@@ -730,10 +730,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .services__grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 2.5rem;
-  max-width: 55%;
-  margin: 0;
+  max-width: 63%;
+  margin: 0 auto;
 }
 
 .services__column {
