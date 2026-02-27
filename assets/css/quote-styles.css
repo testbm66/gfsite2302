@@ -1381,6 +1381,102 @@ a:hover {
 }
 
 /* ================================
+   Quiz step Trustpilot card (bubble)
+================================ */
+.quiz-trustpilot-card {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-green-pale);
+  border: 1px solid rgba(34, 139, 34, 0.2);
+  border-radius: 0.9rem;
+  text-align: center;
+  max-width: 260px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quiz-trustpilot-card__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--transition-base);
+}
+
+.quiz-trustpilot-card__link:hover {
+  opacity: 0.9;
+  text-decoration: none;
+  color: inherit;
+}
+
+.quiz-trustpilot-card__logo {
+  height: 16px;
+  width: auto;
+}
+
+.quiz-trustpilot-card__stars {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.quiz-trustpilot-card__stars .tp-star {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  position: relative;
+}
+
+.quiz-trustpilot-card__stars .tp-star::before {
+  content: '\2605';
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.quiz-trustpilot-card__stars .tp-star--full::before {
+  color: #00b67a;
+}
+
+.quiz-trustpilot-card__stars .tp-star--partial {
+  overflow: hidden;
+}
+
+.quiz-trustpilot-card__stars .tp-star--partial::before {
+  color: #00b67a;
+  display: inline-block;
+  width: 70%;
+  overflow: hidden;
+}
+
+.quiz-trustpilot-card__stars .tp-star--partial::after {
+  content: '\2605';
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #dcdce6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.quiz-trustpilot-card__rating {
+  font-size: 0.8rem;
+  color: var(--color-gray-700);
+  margin: 0;
+}
+
+.quiz-trustpilot-card__rating strong {
+  color: var(--color-gray-900);
+}
+
+.quiz-trustpilot-card__rating span {
+  text-decoration: underline;
+  text-decoration-color: var(--color-gray-300);
+}
+
+/* ================================
    Social Proof / Trustpilot Badge
 ================================ */
 .pkg-social-proof {

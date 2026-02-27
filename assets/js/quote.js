@@ -154,12 +154,27 @@ document.addEventListener('DOMContentLoaded', () => {
     return flow[currentStepIndex] || flow[0];
   }
   
+  const funnelStepsWithTrustpilot = [2, 3, 4, 5, 6, 8, 9, '3b', '4b'];
+
   function showStep(stepId) {
     allSteps.forEach(step => step.classList.remove('is-active'));
     
     const targetStep = getStepElement(stepId);
     if (targetStep) {
       targetStep.classList.add('is-active');
+    }
+
+    const trustpilotCard = document.getElementById('quizTrustpilotCard');
+    const trustpilotPlaceholder = document.getElementById('quizTrustpilotPlaceholder');
+    if (trustpilotCard && trustpilotPlaceholder) {
+      const showTrustpilot = funnelStepsWithTrustpilot.includes(stepId);
+      if (showTrustpilot && targetStep) {
+        targetStep.appendChild(trustpilotCard);
+        trustpilotCard.setAttribute('aria-hidden', 'false');
+      } else {
+        trustpilotPlaceholder.appendChild(trustpilotCard);
+        trustpilotCard.setAttribute('aria-hidden', 'true');
+      }
     }
     
     if (stepHistory.length > 1) {
