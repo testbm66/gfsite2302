@@ -2691,6 +2691,19 @@ svg.footer__logo-icon {
   margin: 0 auto;
 }
 
+.pricing-grid--three {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1100px;
+}
+
+.pricing-card__partner {
+  margin-bottom: var(--space-sm);
+}
+
+.feature-grid--three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .pricing-card {
   background: var(--color-white);
   border-radius: var(--radius-xl);
@@ -2749,10 +2762,25 @@ svg.footer__logo-icon {
   margin-bottom: var(--space-xl);
 }
 
+@media (max-width: 900px) {
+  .pricing-grid--three {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .feature-grid--three {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 640px) {
   .pricing-grid {
     grid-template-columns: 1fr;
     max-width: 400px;
+  }
+  .pricing-grid--three {
+    grid-template-columns: 1fr;
+  }
+  .feature-grid--three {
+    grid-template-columns: 1fr;
   }
 }
 
