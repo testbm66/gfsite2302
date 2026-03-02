@@ -25,16 +25,13 @@ const MAPBOX_CONFIG = {
   defaultCenter: [-3.19, 55.95],     // Scotland fallback (Edinburgh)
 };
 
-// ============================================
-// STRIPE CONFIGURATION
-// Set publishableKey and priceId to enable live payments.
-// Leave as-is to use fallback "quote only" mode.
-// ============================================
+/* STRIPE CONFIGURATION — disabled, kept for future payment flow
 const STRIPE_CONFIG = {
-  publishableKey: '',               // e.g., 'pk_live_...' or 'pk_test_...'
+  publishableKey: '',
   successUrl: window.location.origin + '/quote.html?payment=success',
   cancelUrl:  window.location.origin + '/quote.html?payment=cancelled',
 };
+*/
 
 // ============================================
 // PACKAGE PRICING (placeholder — replace with real prices)
@@ -58,7 +55,7 @@ const PRICING = {
   included: {
     'bird-protection': { label: 'Bird Protection',  price: 0 },
   },
-  depositRate: 0.20,
+  // depositRate: 0.20, // Disabled — no longer taking deposits
 };
 
 function escapeHtml(str) {
@@ -328,6 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  /* showPaymentSuccess() — disabled, kept for future payment flow
   function showPaymentSuccess() {
     allSteps.forEach(step => step.classList.remove('is-active'));
     const payStep = getStepElement('payment-success');
@@ -337,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     progressFill.style.width = '100%';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+  */
 
   // BUG H FIX: show error screen when submission fails
   function showSubmitError() {
@@ -441,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
       _packageTotal:   'package_total_price',
       _depositAmount:  'deposit_amount',
       _paymentStatus:  'payment_status',
+      _callbackTime:   'preferred_callback_time',
     };
 
     const valueMapping = {
@@ -597,18 +597,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const isExistingOwner = formData.solarStatus === 'yes-working' || formData.solarStatus === 'yes-unsure';
 
       if (hubspotResult.success) {
-        if (paymentStatus === 'deposit_paid') {
-          showPaymentSuccess();
-        } else if (isExistingOwner) {
+        if (isExistingOwner) {
           window.location.href = 'vixen-care-plan.html';
           return;
         } else {
           showSuccess();
         }
       } else if (HUBSPOT_CONFIG.portalId === 'YOUR_PORTAL_ID') {
-        if (paymentStatus === 'deposit_paid') {
-          showPaymentSuccess();
-        } else if (isExistingOwner) {
+        if (isExistingOwner) {
           window.location.href = 'vixen-care-plan.html';
           return;
         } else {
@@ -825,8 +821,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const pkgPanelKw      = document.getElementById('panelKw');
   const pkgPanelPrice   = document.getElementById('pkgPanelPrice');
   const pkgTotal        = document.getElementById('pkgTotal');
-  const pkgDeposit      = document.getElementById('pkgDeposit');
-  const pkgBalance      = document.getElementById('pkgBalance');
   const pkgSavings      = document.getElementById('pkgSavings');
   const pkgSavingsAmt   = document.getElementById('pkgSavingsAmount');
   const panelMinusBtn   = document.getElementById('panelMinus');
@@ -847,16 +841,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updatePackageUI() {
     const total   = calcPackageTotal();
-    const deposit = total * PRICING.depositRate;
-    const balance = total - deposit;
     const kw      = ((packageState.panels * PRICING.panelWattage) / 1000).toFixed(1);
 
     if (pkgPanelCount)  pkgPanelCount.textContent = packageState.panels;
     if (pkgPanelKw)     pkgPanelKw.textContent = kw + ' kW system';
     if (pkgPanelPrice)  pkgPanelPrice.textContent = fmtGBP(packageState.panels * PRICING.panelUnitPrice);
     if (pkgTotal)       pkgTotal.textContent = fmtGBP(total);
-    if (pkgDeposit)     pkgDeposit.textContent = fmtGBP(deposit);
-    if (pkgBalance)     pkgBalance.textContent = fmtGBP(balance);
 
     if (panelMinusBtn) panelMinusBtn.disabled = packageState.panels <= PRICING.panelMin;
     if (panelPlusBtn)  panelPlusBtn.disabled  = packageState.panels >= PRICING.panelMax;
@@ -946,17 +936,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function populateOrderSummary() {
     const orderLines   = document.getElementById('orderLines');
     const orderTotal   = document.getElementById('orderTotal');
-    const orderDeposit = document.getElementById('orderDeposit');
-    const orderBalance = document.getElementById('orderBalance');
     const orderContact = document.getElementById('orderContact');
-    const depositBtnAmt = document.getElementById('depositBtnAmount');
 
     if (!orderLines) return;
 
-    const total   = calcPackageTotal();
-    const deposit = total * PRICING.depositRate;
-    const balance = total - deposit;
-    const kw      = ((packageState.panels * PRICING.panelWattage) / 1000).toFixed(1);
+    const total = calcPackageTotal();
+    const kw    = ((packageState.panels * PRICING.panelWattage) / 1000).toFixed(1);
 
     let linesHtml = '';
     linesHtml += `<div class="order-summary__line"><span>Solar System (${kw} kW)</span><span>${fmtGBP(packageState.panels * PRICING.panelUnitPrice)}</span></div>`;
@@ -979,10 +964,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     orderLines.innerHTML = linesHtml;
-    if (orderTotal)   orderTotal.textContent   = fmtGBP(total);
-    if (orderDeposit) orderDeposit.textContent  = fmtGBP(deposit);
-    if (orderBalance) orderBalance.textContent  = fmtGBP(balance);
-    if (depositBtnAmt) depositBtnAmt.textContent = fmtGBP(deposit);
+    if (orderTotal) orderTotal.textContent = fmtGBP(total);
 
     if (orderContact) {
       orderContact.innerHTML = `
@@ -996,31 +978,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const savingsAnchor = document.getElementById('orderSavingsAnchor');
     const savingsText   = document.getElementById('orderSavingsText');
-    const paybackText   = document.getElementById('orderPaybackText');
     if (savingsAnchor && formData.monthlyBill) {
       const annualGen = packageState.panels * CALC_CONFIG.panelOutputPerYear;
       const selfConsumed = annualGen * CALC_CONFIG.selfConsumptionRate;
       const exported = annualGen - selfConsumed;
       const annualSavings = (selfConsumed * CALC_CONFIG.ratePerKwh) + (exported * CALC_CONFIG.exportRate);
-      const paybackMonths = Math.ceil(deposit / (annualSavings / 12));
 
       if (savingsText) savingsText.textContent = `Your system saves ~${fmtGBP(Math.round(annualSavings))}/year`;
-      if (paybackText) paybackText.textContent = paybackMonths <= 12
-        ? `${paybackMonths} months`
-        : `${Math.round(paybackMonths / 12 * 10) / 10} years`;
       savingsAnchor.style.display = 'flex';
     }
   }
 
+  /* populatePaymentSuccess() — disabled, kept for future payment flow
   function populatePaymentSuccess() {
     const paymentSummary = document.getElementById('paymentSummary');
     if (!paymentSummary) return;
-
     const total   = calcPackageTotal();
     const deposit = total * PRICING.depositRate;
     const kw      = ((packageState.panels * PRICING.panelWattage) / 1000).toFixed(1);
     const ref     = 'GF-' + Date.now().toString(36).toUpperCase();
-
     let html = '<h3>Order confirmation</h3><dl>';
     html += `<dt>Reference</dt><dd>${ref}</dd>`;
     html += `<dt>System</dt><dd>${kw} kW solar system</dd>`;
@@ -1039,17 +1015,15 @@ document.addEventListener('DOMContentLoaded', () => {
     html += '</dl>';
     paymentSummary.innerHTML = html;
   }
+  */
 
-  // ============================================
-  // STRIPE CHECKOUT
-  // ============================================
+  /* STRIPE CHECKOUT — disabled, kept for future payment flow
   function saveStateToSession() {
     try {
       sessionStorage.setItem('gf_packageState', JSON.stringify(packageState));
       sessionStorage.setItem('gf_formData', JSON.stringify(formData));
-    } catch (e) { /* storage full or unavailable */ }
+    } catch (e) {}
   }
-
   function restoreStateFromSession() {
     try {
       const pkg = sessionStorage.getItem('gf_packageState');
@@ -1061,37 +1035,25 @@ document.addEventListener('DOMContentLoaded', () => {
       return !!pkg;
     } catch (e) { return false; }
   }
-
   async function redirectToStripe() {
     if (!STRIPE_CONFIG.publishableKey) {
-      console.warn('Stripe not configured — using fallback quote-only flow.');
+      console.warn('Stripe not configured');
       return false;
     }
-
     saveStateToSession();
-
     try {
-      if (typeof Stripe === 'undefined') {
-        console.error('Stripe.js not loaded');
-        return false;
-      }
+      if (typeof Stripe === 'undefined') return false;
       const stripe = Stripe(STRIPE_CONFIG.publishableKey);
       const { error } = await stripe.redirectToCheckout({
-        lineItems: [],
-        mode: 'payment',
+        lineItems: [], mode: 'payment',
         successUrl: STRIPE_CONFIG.successUrl,
         cancelUrl:  STRIPE_CONFIG.cancelUrl,
       });
-      if (error) {
-        console.error('Stripe redirect error:', error);
-        return false;
-      }
+      if (error) return false;
       return true;
-    } catch (err) {
-      console.error('Stripe error:', err);
-      return false;
-    }
+    } catch (err) { return false; }
   }
+  */
 
   // ============================================
   // EVENT LISTENERS
@@ -1135,76 +1097,55 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   // ORDER SUMMARY ACTIONS
   // ============================================
-  const payDepositBtn = document.getElementById('payDepositBtn');
-  const quoteOnlyBtn  = document.getElementById('quoteOnlyBtn');
-
-  if (payDepositBtn) {
-    payDepositBtn.addEventListener('click', async () => {
-      if (isSubmitting) return;
-      payDepositBtn.disabled = true;
-      payDepositBtn.classList.add('btn--loading');
-      isSubmitting = true;
-
-      formData._packagePanels   = packageState.panels;
-      formData._packageBattery  = Object.entries(packageState.batteries).filter(([,q]) => q > 0).map(([k,q]) => `${q}x ${PRICING.batteries[k].label}`).join(', ') || 'None';
-      formData._packageAddons   = packageState.addons.join(', ');
-      formData._packageTotal    = calcPackageTotal();
-      formData._depositAmount   = Math.round(calcPackageTotal() * PRICING.depositRate * 100) / 100;
-
-      if (STRIPE_CONFIG.publishableKey) {
-        const redirected = await redirectToStripe();
-        if (!redirected) {
-          await doHubSpotSubmit('deposit_attempted');
-        }
-      } else {
-        await doHubSpotSubmit('deposit_paid');
-      }
-
-      payDepositBtn.disabled = false;
-      payDepositBtn.classList.remove('btn--loading');
-      isSubmitting = false;
-    });
+  function collectPackageData() {
+    formData._packagePanels  = packageState.panels;
+    formData._packageBattery = Object.entries(packageState.batteries).filter(([,q]) => q > 0).map(([k,q]) => `${q}x ${PRICING.batteries[k].label}`).join(', ') || 'None';
+    formData._packageAddons  = packageState.addons.join(', ');
+    formData._packageTotal   = calcPackageTotal();
+    formData._depositAmount  = 0;
   }
 
-  if (quoteOnlyBtn) {
-    quoteOnlyBtn.addEventListener('click', async () => {
+  const getQuoteBtn = document.getElementById('getQuoteBtn');
+  if (getQuoteBtn) {
+    getQuoteBtn.addEventListener('click', async () => {
       if (isSubmitting) return;
-      quoteOnlyBtn.disabled = true;
-      quoteOnlyBtn.classList.add('btn--loading');
+      getQuoteBtn.disabled = true;
+      getQuoteBtn.classList.add('btn--loading');
       isSubmitting = true;
 
-      formData._packagePanels   = packageState.panels;
-      formData._packageBattery  = Object.entries(packageState.batteries).filter(([,q]) => q > 0).map(([k,q]) => `${q}x ${PRICING.batteries[k].label}`).join(', ') || 'None';
-      formData._packageAddons   = packageState.addons.join(', ');
-      formData._packageTotal    = calcPackageTotal();
-      formData._depositAmount   = 0;
+      collectPackageData();
+      await doHubSpotSubmit('quote_requested');
 
-      await doHubSpotSubmit('quote_only');
-
-      quoteOnlyBtn.disabled = false;
-      quoteOnlyBtn.classList.remove('btn--loading');
+      getQuoteBtn.disabled = false;
+      getQuoteBtn.classList.remove('btn--loading');
       isSubmitting = false;
     });
   }
 
   const callbackBtn = document.getElementById('callbackBtn');
-  if (callbackBtn) {
-    callbackBtn.addEventListener('click', async () => {
+  const callbackTimePicker = document.getElementById('callbackTimePicker');
+  const confirmCallbackBtn = document.getElementById('confirmCallbackBtn');
+
+  if (callbackBtn && callbackTimePicker) {
+    callbackBtn.addEventListener('click', () => {
+      callbackTimePicker.style.display = callbackTimePicker.style.display === 'none' ? 'block' : 'none';
+    });
+  }
+
+  if (confirmCallbackBtn) {
+    confirmCallbackBtn.addEventListener('click', async () => {
       if (isSubmitting) return;
-      callbackBtn.disabled = true;
-      callbackBtn.classList.add('btn--loading');
+      confirmCallbackBtn.disabled = true;
+      confirmCallbackBtn.classList.add('btn--loading');
       isSubmitting = true;
 
-      formData._packagePanels   = packageState.panels;
-      formData._packageBattery  = Object.entries(packageState.batteries).filter(([,q]) => q > 0).map(([k,q]) => `${q}x ${PRICING.batteries[k].label}`).join(', ') || 'None';
-      formData._packageAddons   = packageState.addons.join(', ');
-      formData._packageTotal    = calcPackageTotal();
-      formData._depositAmount   = 0;
-
+      collectPackageData();
+      const timeSelect = document.getElementById('callbackTime');
+      formData._callbackTime = timeSelect ? timeSelect.value : 'anytime';
       await doHubSpotSubmit('callback_requested');
 
-      callbackBtn.disabled = false;
-      callbackBtn.classList.remove('btn--loading');
+      confirmCallbackBtn.disabled = false;
+      confirmCallbackBtn.classList.remove('btn--loading');
       isSubmitting = false;
     });
   }
@@ -1218,6 +1159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData._funnelSource = 'Solar Health-Check Funnel';
   }
 
+  /* Payment redirect check — disabled, kept for future payment flow
   const paymentParam = urlParams.get('payment');
   if (paymentParam === 'success') {
     restoreStateFromSession();
@@ -1228,6 +1170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     return;
   }
+  */
 
   const consentCheckbox = form.querySelector('input[name="consent"]');
   const submitButton = form.querySelector('button[type="submit"]');

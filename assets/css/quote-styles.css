@@ -1792,8 +1792,42 @@ a:hover {
   margin-bottom: 1rem;
 }
 
-.order-summary__actions .btn--primary svg {
+.order-summary__actions .btn--primary svg,
+.order-summary__actions .btn--outline svg {
   margin-right: 0.25rem;
+}
+
+.order-summary__note {
+  font-size: 0.8rem;
+  color: var(--color-gray-500);
+  margin: 0.5rem 0 0;
+  font-style: italic;
+}
+
+.callback-time-picker {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: var(--color-green-pale);
+  border: 1px solid rgba(34, 139, 34, 0.15);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.callback-time-picker__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+}
+
+.callback-time-picker__select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  background: var(--color-white);
 }
 
 .order-summary__protection {
