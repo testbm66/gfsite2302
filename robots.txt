@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://YOURDOMAIN.COM/sitemap.xml
+Sitemap: https://greenfox.energy/sitemap.xml

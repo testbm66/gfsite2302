@@ -172,7 +172,10 @@ function initProcessScroll() {
   const wrapper = document.getElementById('processWrapper');
   if (!wrapper) return;
 
-  if (window.innerWidth <= 768) return;
+  if (window.innerWidth <= 1024) {
+    initMobileProcessScroll(wrapper);
+    return;
+  }
 
   const sun = wrapper.querySelector('.process__sun');
   const glow = wrapper.querySelector('.process__glow');
@@ -220,8 +223,35 @@ function initProcessScroll() {
   update();
 }
 
+function initMobileProcessScroll(wrapper) {
+  var cards = wrapper.querySelectorAll('.process__card');
+  if (!cards.length) return;
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('process__card--active');
+      }
+    });
+  }, { threshold: 0.4 });
+
+  for (var i = 0; i < cards.length; i++) {
+    observer.observe(cards[i]);
+  }
+}
+
 function initReviewsStrip() {
-  var track = document.querySelector('.reviews-strip__track');
+  var isMobile = window.innerWidth <= 1024;
+
+  if (isMobile) {
+    initCheckerboardReviews();
+  } else {
+    initDesktopReviews();
+  }
+}
+
+function initDesktopReviews() {
+  var track = document.querySelector('.reviews-strip > .reviews-strip__track');
   if (!track) return;
 
   var origCards = Array.from(track.querySelectorAll('.reviews-strip__card'));
@@ -240,6 +270,27 @@ function initReviewsStrip() {
   track.style.setProperty('--reviews-duration', (35 * totalSets / 2) + 's');
 
   track.classList.add('is-scrolling');
+}
+
+function initCheckerboardReviews() {
+  var rows = document.querySelectorAll('.reviews-strip__checker .reviews-strip__track');
+  if (!rows.length) return;
+
+  for (var r = 0; r < rows.length; r++) {
+    var track = rows[r];
+    var origCards = [];
+    var cards = track.querySelectorAll('.reviews-strip__card');
+    for (var c = 0; c < cards.length; c++) {
+      origCards.push(cards[c]);
+    }
+    if (!origCards.length) continue;
+
+    for (var i = 0; i < origCards.length; i++) {
+      track.appendChild(origCards[i].cloneNode(true));
+    }
+
+    track.classList.add('checker-scrolling');
+  }
 }
 
 function initDifferenceSwap() {

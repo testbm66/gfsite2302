@@ -9,7 +9,7 @@
 // Replace these with your actual HubSpot IDs
 // ============================================
 const HUBSPOT_CONFIG = {
-  portalId: 'YOUR_PORTAL_ID',      // e.g., '143575537'
+  portalId: '143575537',
   formGuid: 'YOUR_FORM_GUID'       // e.g., 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 };
 

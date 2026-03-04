@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GreenFox Energy – Site Audit & User Journeys</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gf-green: #2e8b57;
+      --gf-dark: #1a3c2e;
+      --gf-pale: #eef7f1;
+      --amber: #d97706;
+      --red: #dc2626;
+      --ink: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --surface: #ffffff;
+      --bg: #f9fafb;
+      --radius: 10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      line-height: 1.65;
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      background: linear-gradient(135deg, var(--gf-dark) 0%, #245c3f 100%);
+      color: white;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .cover__label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+    .cover h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+    .cover p { opacity: 0.8; font-size: 0.95rem; }
+    .cover__meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    /* ── Layout ── */
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 2.5rem 0; }
+    .section + .section { border-top: 1px solid var(--border); }
+
+    /* ── Typography ── */
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gf-dark);
+      margin-bottom: 0.25rem;
+    }
+    h2 + .section-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.75rem; }
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--ink); margin-bottom: 0.35rem; }
+    p { margin-bottom: 0.65rem; font-size: 0.92rem; }
+    strong { font-weight: 600; }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin: -1.5rem auto 0;
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .toc__title { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .toc ol { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 2rem; }
+    .toc a { color: var(--gf-green); text-decoration: none; font-size: 0.88rem; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ── Journey cards ── */
+    .journey {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .journey__header { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.75rem; }
+    .journey__icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .journey__icon--a { background: #dbeafe; color: #2563eb; }
+    .journey__icon--b { background: #fef3c7; color: #d97706; }
+    .journey__icon--c { background: #d1fae5; color: #059669; }
+    .journey__icon--d { background: #ede9fe; color: #7c3aed; }
+    .journey__title { font-size: 1rem; font-weight: 600; }
+    .journey__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem; }
+    .journey__col h4 {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 0.35rem;
+    }
+    .journey__col--works h4 { color: var(--gf-green); }
+    .journey__col--issues h4 { color: var(--red); }
+    .journey__col p, .journey__col li { font-size: 0.85rem; color: var(--muted); }
+    .journey__col ul { padding-left: 1rem; margin: 0; }
+    .journey__col li { margin: 0.2rem 0; }
+    .journey__path {
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .journey__path code { font-size: 0.8rem; background: #e5e7eb; padding: 0.1rem 0.35rem; border-radius: 3px; }
+
+    /* ── Screenshots ── */
+    .screenshots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .screenshots--single { grid-template-columns: 1fr; }
+    .screenshot-wrap { position: relative; }
+    .screenshot {
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: block;
+    }
+    .screenshot-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      text-align: center;
+    }
+
+    /* ── Status table ── */
+    .status-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; margin-top: 0.5rem; }
+    .status-table th {
+      text-align: left; padding: 0.6rem 0.75rem;
+      background: var(--gf-pale); color: var(--gf-dark);
+      font-weight: 600; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .status-table th:first-child { border-radius: 8px 0 0 0; }
+    .status-table th:last-child { border-radius: 0 8px 0 0; }
+    .status-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .status-table tr:last-child td { border-bottom: none; }
+    .status-table tr:hover td { background: #f3f4f6; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 100px;
+      font-size: 0.68rem; font-weight: 600; white-space: nowrap;
+    }
+    .badge--done { background: var(--gf-pale); color: #166534; }
+    .badge--todo { background: #fef3c7; color: #92400e; }
+    .badge--critical { background: #fee2e2; color: #991b1b; }
+
+    /* ── Priority cards ── */
+    .priorities { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem; }
+    .priority-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .priority-card--high { border-left: 4px solid var(--red); }
+    .priority-card--med  { border-left: 4px solid var(--amber); }
+    .priority-card--low  { border-left: 4px solid var(--border); }
+    .priority-card__label {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 0.6rem;
+    }
+    .priority-card--high .priority-card__label { color: var(--red); }
+    .priority-card--med  .priority-card__label { color: var(--amber); }
+    .priority-card--low  .priority-card__label { color: var(--muted); }
+    .priority-card ul { padding-left: 1.1rem; margin: 0; }
+    .priority-card li { font-size: 0.88rem; margin: 0.35rem 0; }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; padding: 0; margin: 0.5rem 0; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      padding: 0.4rem 0; font-size: 0.88rem;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .checklist li:last-child { border-bottom: none; }
+
+    /* ── Footer ── */
+    .doc-footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Print helper ── */
+    .no-print { }
+    .print-tip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.8rem 1.25rem;
+      margin: 1rem auto 0;
+      max-width: 820px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .print-tip strong { color: var(--ink); }
+    kbd { background: #e5e7eb; padding: 0.12rem 0.4rem; border-radius: 4px; font-size: 0.82em; font-family: inherit; }
+
+    @media print {
+      .cover { padding: 2rem 1rem 1.5rem; }
+      .cover h1 { font-size: 1.6rem; }
+      .no-print { display: none !important; }
+      .section { padding: 1.5rem 0; }
+      .journey, .priority-card { break-inside: avoid; }
+      .screenshots { grid-template-columns: 1fr; }
+      .screenshot { max-height: 350px; object-fit: contain; }
+      body { background: white; }
+    }
+
+    @media (max-width: 640px) {
+      .journey__row { grid-template-columns: 1fr; }
+      .screenshots { grid-template-columns: 1fr; }
+      .toc ol { grid-template-columns: 1fr; }
+      .cover__meta { flex-direction: column; gap: 0.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Cover ═══ -->
+  <header class="cover">
+    <span class="cover__label">Internal document</span>
+    <h1>GreenFox Energy<br>Site Audit & User Journeys</h1>
+    <p>Website review, user journey mapping, and deployment readiness.</p>
+    <div class="cover__meta">
+      <span>March 2026</span>
+      <span>15 pages reviewed</span>
+      <span>4 user journeys</span>
+    </div>
+  </header>
+
+  <div class="print-tip no-print">
+    Save as PDF: press <kbd>Ctrl</kbd> + <kbd>P</kbd> &rarr; <strong>Save as PDF</strong> &rarr; Save.
+  </div>
+
+  <!-- ═══ TOC ═══ -->
+  <nav class="toc wrap" aria-label="Contents">
+    <div class="toc__title">Contents</div>
+    <ol>
+      <li><a href="#journeys">User Journeys</a></li>
+      <li><a href="#pages">Page-by-Page Analysis</a></li>
+      <li><a href="#boss">Deployment Checklist</a></li>
+      <li><a href="#actions">Recommended Actions</a></li>
+    </ol>
+  </nav>
+
+  <main class="wrap">
+
+    <!-- ═══ 1. User Journeys ═══ -->
+    <section class="section" id="journeys">
+      <h2>User Journeys</h2>
+      <p class="section-sub">Four representative buyer types and how the site serves each one today.</p>
+
+      <!-- Journey A -->
+      <article class="journey">
+        <div class="journey__header">
+          <div class="journey__icon journey__icon--a">A</div>
+          <div class="journey__title">New solar buyer &mdash; no panels yet</div>
+        </div>
+        <div class="journey__path">
+          Homepage / Services &rarr; <code>Get Free Quote</code> &rarr; Quote funnel (location &rarr; property &rarr; system size &rarr; battery &rarr; timeline &rarr; postcode &rarr; contact &rarr; package &rarr; order summary)
+        </div>
+        <div class="journey__row">
+          <div class="journey__col journey__col--works">
+            <h4>What works</h4>
+            <ul>
+              <li>Consistent "Get Free Quote" CTA across every page</li>
+              <li>Funnel skips redundant step 1; starts at location</li>
+              <li>Progress bar, Trustpilot card, and fox helper build trust</li>
+              <li>Package step shows batteries, add-ons, bird protection included</li>
+            </ul>
+          </div>
+          <div class="journey__col journey__col--issues">
+            <h4>What needs fixing</h4>
+            <ul>
+              <li>Funnel end still shows deposit/Stripe checkout (Boss #8)</li>
+              <li>HubSpot, Mapbox, and Stripe placeholders prevent live use</li>
+            </ul>
+          </div>
+        </div>
+        <div class="screenshots">
+          <div class="screenshot-wrap">
+            <img src="audit/01-homepage.png" alt="Homepage" class="screenshot">
+            <div class="screenshot-label">Homepage &mdash; hero & primary CTA</div>
+          </div>
+          <div class="screenshot-wrap">
+            <img src="audit/02-quote-step-location.png" alt="Quote funnel location step" class="screenshot">
+            <div class="screenshot-label">Quote funnel &mdash; location step</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Journey B -->
+      <article class="journey">
+        <div class="journey__header">
+          <div class="journey__icon journey__icon--b">B</div>
+          <div class="journey__title">Existing solar &mdash; battery or EV charger</div>
+        </div>
+        <div class="journey__path">
+          Services &rarr; <code>Get Battery Quote</code> or <code>Enquire About EV Charging</code> &rarr; quote.html (same new-solar funnel)
+        </div>
+        <div class="journey__row">
+          <div class="journey__col journey__col--works">
+            <h4>What works</h4>
+            <ul>
+              <li>Services page clearly explains battery & EV offerings</li>
+              <li>Contact form has "Battery storage enquiry" in subject dropdown</li>
+            </ul>
+          </div>
+          <div class="journey__col journey__col--issues">
+            <h4>What needs fixing</h4>
+            <ul>
+              <li><span class="badge badge--critical">Critical</span> Both CTAs dump users into the new-solar funnel &mdash; intent is lost</li>
+              <li>No dedicated battery or EV pages exist yet (Boss #5, #15, #16)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="screenshots screenshots--single">
+          <div class="screenshot-wrap">
+            <img src="audit/03-services.png" alt="Services page" class="screenshot">
+            <div class="screenshot-label">Services page &mdash; Battery & EV CTAs route to wrong funnel</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Journey C -->
+      <article class="journey">
+        <div class="journey__header">
+          <div class="journey__icon journey__icon--c">C</div>
+          <div class="journey__title">Existing solar &mdash; care plan or health check</div>
+        </div>
+        <div class="journey__path">
+          Nav <code>Health-Check</code> &rarr; solar-healthcheck.html &nbsp;|&nbsp; Footer / Services &rarr; <code>Vixen Care Plan</code> &rarr; vixen-care-plan.html
+        </div>
+        <div class="journey__row">
+          <div class="journey__col journey__col--works">
+            <h4>What works</h4>
+            <ul>
+              <li>Clear separation: &pound;99 health-check vs ongoing Vixen Care Plan</li>
+              <li>Card order correct (Vixen left, One-Off right &mdash; Boss #12)</li>
+              <li>Contact form includes health-check and care plan subjects</li>
+            </ul>
+          </div>
+          <div class="journey__col journey__col--issues">
+            <h4>What needs fixing</h4>
+            <ul>
+              <li>"Book Health-Check" and "Enquire Now" need to connect to a real booking/contact flow</li>
+            </ul>
+          </div>
+        </div>
+        <div class="screenshots">
+          <div class="screenshot-wrap">
+            <img src="audit/04-healthcheck.png" alt="Health-Check page" class="screenshot">
+            <div class="screenshot-label">&pound;99 Solar Health-Check</div>
+          </div>
+          <div class="screenshot-wrap">
+            <img src="audit/05-vixen-care-plan.png" alt="Vixen Care Plan page" class="screenshot">
+            <div class="screenshot-label">Vixen Care Plan</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Journey D -->
+      <article class="journey">
+        <div class="journey__header">
+          <div class="journey__icon journey__icon--d">D</div>
+          <div class="journey__title">Area-based visitor (e.g. Edinburgh)</div>
+        </div>
+        <div class="journey__path">
+          Footer "Areas We Cover" &rarr; e.g. <code>areas/edinburgh.html</code> &rarr; local info &rarr; Get Free Quote / Book Health-Check
+        </div>
+        <div class="journey__row">
+          <div class="journey__col journey__col--works">
+            <h4>What works</h4>
+            <ul>
+              <li>Localised messaging (sunshine hours, area stats)</li>
+              <li>Consistent header/footer and CTAs</li>
+              <li>5 area pages: Edinburgh, Glasgow, Aberdeen, Dundee, Perth</li>
+            </ul>
+          </div>
+          <div class="journey__col journey__col--issues">
+            <h4>What needs fixing</h4>
+            <ul>
+              <li>Minor: "Battery Storage" missing from some area page footers</li>
+            </ul>
+          </div>
+        </div>
+        <div class="screenshots screenshots--single">
+          <div class="screenshot-wrap">
+            <img src="audit/07-edinburgh.png" alt="Edinburgh area page" class="screenshot">
+            <div class="screenshot-label">Edinburgh area page</div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ═══ 2. Page-by-Page ═══ -->
+    <section class="section" id="pages">
+      <h2>Page-by-Page Analysis</h2>
+      <p class="section-sub">Summary of what works and what still needs attention on each page.</p>
+
+      <table class="status-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">Page</th>
+            <th style="width: 42%;">Works</th>
+            <th style="width: 36%;">Issues</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Homepage</strong></td>
+            <td>Trustpilot badge, single CTA, How it Works section, Why Choose Us (QualityMark, &pound; icon), cookie banner</td>
+            <td>Canonical/OG URLs still say YOURDOMAIN.COM</td>
+          </tr>
+          <tr>
+            <td><strong>Quote funnel</strong></td>
+            <td>Correct flow (step 1 removed), Trustpilot in steps, back button, package configurator</td>
+            <td>Deposit/Stripe still present; all API keys are placeholders</td>
+          </tr>
+          <tr>
+            <td><strong>Services</strong></td>
+            <td>Clear solar / battery / EV / maintenance sections</td>
+            <td>Battery &amp; EV buttons go to wrong funnel</td>
+          </tr>
+          <tr>
+            <td><strong>Health-Check</strong></td>
+            <td>&pound;99 offer, inclusions, FAQ accordions, refund message</td>
+            <td>"Book" CTA needs a live booking destination</td>
+          </tr>
+          <tr>
+            <td><strong>Vixen Care Plan</strong></td>
+            <td>Plan vs one-off; correct card order</td>
+            <td>"Enquire Now" needs a live destination</td>
+          </tr>
+          <tr>
+            <td><strong>Contact</strong></td>
+            <td>Call, email, Quick Quote, subject dropdown, FAQ</td>
+            <td>Form submission depends on HubSpot &mdash; placeholder IDs</td>
+          </tr>
+          <tr>
+            <td><strong>Area pages</strong></td>
+            <td>Localised content, consistent CTAs</td>
+            <td>Footer links inconsistent across areas</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="screenshots screenshots--single" style="margin-top: 1.25rem;">
+        <div class="screenshot-wrap">
+          <img src="audit/06-contact.png" alt="Contact page" class="screenshot">
+          <div class="screenshot-label">Contact page &mdash; form with subject dropdown</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 3. Deployment Checklist ═══ -->
+    <section class="section" id="boss">
+      <h2>Deployment Checklist</h2>
+      <p class="section-sub">Progress against Boss Notes &mdash; what&rsquo;s done and what remains.</p>
+
+      <h3 style="margin-top: 1.25rem; margin-bottom: 0.75rem;">Completed</h3>
+      <ul class="checklist">
+        <li><span class="badge badge--done">Done</span> Logo: "GreenFox" emboldened, not "Energy"</li>
+        <li><span class="badge badge--done">Done</span> Funnel: "Do you have solar?" step removed</li>
+        <li><span class="badge badge--done">Done</span> CTA text: "Get Free Quote" consistent everywhere</li>
+        <li><span class="badge badge--done">Done</span> Trustpilot card added to funnel steps</li>
+        <li><span class="badge badge--done">Done</span> Fox helper: "Every customer gets a dedicated project manager"</li>
+        <li><span class="badge badge--done">Done</span> Care &amp; Maintenance hidden; copy updated for when it returns</li>
+        <li><span class="badge badge--done">Done</span> Vixen page: card order corrected</li>
+        <li><span class="badge badge--done">Done</span> "No hidden costs" icon changed from $ to &pound;</li>
+        <li><span class="badge badge--done">Done</span> Battery specs corrected; bird protection included as standard</li>
+        <li><span class="badge badge--done">Done</span> Add-on pricing: EV &pound;999, Backup Gateway &pound;950, Solo Diverter &pound;650</li>
+        <li><span class="badge badge--done">Done</span> Founded 2023 (not 2019); QualityMark (not HIES/IBG)</li>
+      </ul>
+
+      <h3 style="margin-top: 1.75rem; margin-bottom: 0.75rem;">Outstanding</h3>
+      <ul class="checklist">
+        <li><span class="badge badge--todo">#5 / #15 / #16</span> Build dedicated battery &amp; EV charger pages</li>
+        <li><span class="badge badge--todo">#8</span> Replace deposit/Stripe with "Send me my quote" + "Speak to someone"</li>
+        <li><span class="badge badge--todo">#20</span> Externalise pricing to a config file or HubSpot Products</li>
+        <li><span class="badge badge--critical">Config</span> Replace all placeholder IDs (YOURDOMAIN.COM, HubSpot, Mapbox, Stripe)</li>
+      </ul>
+    </section>
+
+    <!-- ═══ 4. Recommended Actions ═══ -->
+    <section class="section" id="actions">
+      <h2>Recommended Actions</h2>
+      <p class="section-sub">Prioritised list of what to tackle before go-live.</p>
+
+      <div class="priorities">
+        <div class="priority-card priority-card--high">
+          <div class="priority-card__label">High priority &mdash; blockers</div>
+          <ul>
+            <li>Remove deposit/Stripe from funnel end. Replace with "Send me my quote" (HubSpot email) and "Speak to someone" (contact/callback).</li>
+            <li>Create dedicated battery and EV charger pages with their own info + contact paths. Point existing CTAs to them.</li>
+            <li>Replace every YOUR_* / YOURDOMAIN.COM placeholder with live values (HubSpot portal, form GUID, Mapbox token, domain).</li>
+          </ul>
+        </div>
+        <div class="priority-card priority-card--med">
+          <div class="priority-card__label">Medium priority</div>
+          <ul>
+            <li>Externalise pricing (Boss #20) so updates don&rsquo;t need code changes.</li>
+            <li>Wire "Book Health-Check" and "Enquire Now" to a real contact/booking flow.</li>
+            <li>Confirm Contact form submits to HubSpot once portal ID is set.</li>
+          </ul>
+        </div>
+        <div class="priority-card priority-card--low">
+          <div class="priority-card__label">Nice to have</div>
+          <ul>
+            <li>Unhide Care &amp; Maintenance card on home/services when offer is ready.</li>
+            <li>Add "Battery Storage" link to area page footers for consistency.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="doc-footer">
+    GreenFox Energy &middot; Internal audit &middot; March 2026
+  </footer>
+
+</body>
+</html>
