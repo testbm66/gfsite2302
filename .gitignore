@@ -1,2 +1,5 @@
 HUBSPOT_SETUP.md
 boss-notes.txt
+
+# MCP config may contain Supabase access token
+.cursor/mcp.json
