@@ -50,7 +50,7 @@ const PRICING = {
   addons: {
     'ev-charger':      { label: 'EV Charger',      price: 999 },
     'backup-gateway':  { label: 'Backup Gateway',   price: 950 },
-    'solo-diverter':   { label: 'Solo Diverter',    price: 650 },
+    'solo-diverter':   { label: 'Solar Diverter',  price: 650 },
   },
   included: {
     'bird-protection': { label: 'Bird Protection',  price: 0 },

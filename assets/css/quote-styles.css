@@ -1797,6 +1797,13 @@ a:hover {
   margin-right: 0.25rem;
 }
 
+.order-summary__cta-note {
+  font-size: 0.85rem;
+  color: var(--color-gray-600);
+  margin: 0.5rem 0 0;
+  text-align: center;
+}
+
 .order-summary__note {
   font-size: 0.8rem;
   color: var(--color-gray-500);

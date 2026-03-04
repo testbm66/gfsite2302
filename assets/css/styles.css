@@ -436,9 +436,47 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero__badge-stars {
-  color: #F59E0B;
-  letter-spacing: -1px;
-  font-size: 1.1rem;
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+  letter-spacing: 0;
+}
+
+.hero__badge-stars .tp-star {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  position: relative;
+}
+
+.hero__badge-stars .tp-star::before {
+  content: '\2605';
+  font-size: 1rem;
+  line-height: 1;
+  color: #00b67a;
+}
+
+.hero__badge-stars .tp-star--partial {
+  overflow: hidden;
+  width: 14px;
+}
+
+.hero__badge-stars .tp-star--partial::before {
+  display: inline-block;
+  width: 70%;
+  overflow: hidden;
+  color: #00b67a;
+}
+
+.hero__badge-stars .tp-star--partial::after {
+  content: '\2605';
+  font-size: 1rem;
+  line-height: 1;
+  color: #dcdce6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
 .hero__title {
@@ -1587,6 +1625,52 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-gray-700);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.reviews-strip__badge-stars {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.reviews-strip__badge-stars .tp-star {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  position: relative;
+}
+
+.reviews-strip__badge-stars .tp-star::before {
+  content: '\2605';
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #00b67a;
+}
+
+.reviews-strip__badge-stars .tp-star--partial {
+  overflow: hidden;
+  width: 12px;
+}
+
+.reviews-strip__badge-stars .tp-star--partial::before {
+  display: inline-block;
+  width: 70%;
+  overflow: hidden;
+  color: #00b67a;
+}
+
+.reviews-strip__badge-stars .tp-star--partial::after {
+  content: '\2605';
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #dcdce6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
 .reviews-strip__meta a {
@@ -1800,9 +1884,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .footer__logo-icon {
-  height: 36px;
+  height: 24px;
   width: auto;
-  filter: brightness(0) invert(1);
+  object-fit: contain;
 }
 
 .footer__logo-text {
@@ -2047,10 +2131,10 @@ svg.header__logo-icon {
 
 img.footer__logo-icon,
 svg.footer__logo-icon {
-  height: 36px;
-  width: 36px;
+  height: 24px;
+  width: auto;
+  max-width: 24px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
 }
 
 /* ================================
