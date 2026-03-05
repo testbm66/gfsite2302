@@ -10,7 +10,7 @@
 // ============================================
 const HUBSPOT_CONFIG = {
   portalId: '143575537',
-  formGuid: 'YOUR_FORM_GUID'       // e.g., 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+  formGuid: '1gQIZksNSRqeDyXcp3akQ2g2dhbld'
 };
 
 // ============================================
@@ -422,33 +422,27 @@ document.addEventListener('DOMContentLoaded', () => {
       lastName: 'lastname',
       email: 'email',
       phone: 'phone',
-      postcode: 'zip',
-      solarStatus: 'solar_status',
-      location: 'property_location',
+      postcode: 'post_code',
+      location: 'commercial',
       propertyType: 'property_type',
-      systemSize: 'system_size_interest',
-      battery: 'battery_interest',
-      timeline: 'solar_timeline',
-      supportType: 'support_type_needed',
-      monthlyBill: 'monthly_electricity_bill',
+      systemSize: 'home_size',
+      battery: 'battery_interested',
+      timeline: 'purchase_timeline',
+      monthlyBill: 'monthly_electric_bill',
       notes: 'message',
       installLat:      'install_latitude',
       installLng:      'install_longitude',
-      _packagePanels:  'package_panels',
-      _packageBattery: 'package_battery',
-      _packageAddons:  'package_addons',
-      _packageTotal:   'package_total_price',
-      _depositAmount:  'deposit_amount',
-      _paymentStatus:  'payment_status',
+      _packagePanels:  'quoted_panel_count',
+      _packageBattery: 'quoted_battery',
+      _packageAddons:  'quoted_addons',
+      _packageTotal:   'quoted_total',
+      _paymentStatus:  'enquiry_type',
       _callbackTime:   'preferred_callback_time',
     };
 
     const valueMapping = {
-      'not-yet': 'Not yet',
-      'yes-working': 'Yes - working well',
-      'yes-unsure': 'Yes - unsure if working',
-      'home': 'Home',
-      'business': 'Business',
+      'home': 'No',
+      'business': 'Yes',
       'detached': 'Detached',
       'semi-detached': 'Semi-detached',
       'terraced': 'Terraced',
@@ -470,10 +464,6 @@ document.addEventListener('DOMContentLoaded', () => {
       '1-3-months': '1-3 months',
       '3-6-months': '3-6 months',
       'just-exploring': 'Just exploring',
-      'health-check': 'Health check',
-      'add-battery': 'Add battery',
-      'expand-system': 'Expand system',
-      'maintenance': 'Maintenance plan'
     };
 
     const fields = [];
@@ -520,14 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
       legalConsentOptions: {
         consent: {
           consentToProcess: true,
-          text: "I agree to allow GreenFox Energy to store and process my personal data.",
-          communications: [
-            {
-              value: true,
-              subscriptionTypeId: 999,
-              text: "I agree to receive marketing communications from GreenFox Energy."
-            }
-          ]
+          text: "I agree to allow GreenFox Energy to store and process my personal data."
         }
       }
     };
