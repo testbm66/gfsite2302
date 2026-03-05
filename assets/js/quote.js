@@ -34,9 +34,9 @@ const STRIPE_CONFIG = {
 */
 
 // ============================================
-// PACKAGE PRICING (placeholder — replace with real prices)
+// PACKAGE PRICING — fetched from /api/pricing, fallback below
 // ============================================
-const PRICING = {
+const PRICING_FALLBACK = {
   panelUnitPrice: 400,
   panelMin: 4,
   panelMax: 14,
@@ -44,7 +44,7 @@ const PRICING = {
   batteries: {
     none:      { label: 'No battery',        price: 0    },
     duracell:  { label: 'Duracell 5 kWh',    price: 2500 },
-    sigenergy: { label: 'Sigenergy 10 kWh',    price: 3500 },
+    sigenergy: { label: 'Sigenergy 10 kWh',  price: 3500 },
     tesla:     { label: 'Tesla Powerwall 3',  price: 4500 },
   },
   addons: {
@@ -55,8 +55,48 @@ const PRICING = {
   included: {
     'bird-protection': { label: 'Bird Protection',  price: 0 },
   },
-  // depositRate: 0.20, // Disabled — no longer taking deposits
 };
+
+/** Active pricing: either from API or fallback. Normalised to PRICING shape for UI. */
+let PRICING = JSON.parse(JSON.stringify(PRICING_FALLBACK));
+let DYNAMIC_PRICING = null; // Full API response when available
+
+/** Map home_size to tier: small→lower, medium→mid, large→upper, unsure→mid */
+function getTierFromHomeSize(homeSize) {
+  const map = { small: 'lower', medium: 'mid', large: 'upper', unsure: 'mid' };
+  return map[homeSize] || 'mid';
+}
+
+/** Fetch pricing from /api/pricing and store in DYNAMIC_PRICING + PRICING */
+async function fetchPricing() {
+  try {
+    const base = window.location.origin;
+    const res = await fetch(`${base}/api/pricing`);
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    DYNAMIC_PRICING = data;
+    // Merge into PRICING for UI compatibility (batteries, addons labels/prices)
+    PRICING.panelMin = data.panelMin ?? PRICING_FALLBACK.panelMin;
+    PRICING.panelMax = data.panelMax ?? PRICING_FALLBACK.panelMax;
+    PRICING.panelWattage = data.panelWattage ?? PRICING_FALLBACK.panelWattage;
+    for (const [key, b] of Object.entries(data.batteries || {})) {
+      PRICING.batteries[key] = PRICING.batteries[key] || {};
+      PRICING.batteries[key].label = b.name;
+      PRICING.batteries[key].price = b.base_price;
+    }
+    for (const [key, a] of Object.entries(data.addons || {})) {
+      PRICING.addons[key] = PRICING.addons[key] || {};
+      PRICING.addons[key].label = a.name;
+      PRICING.addons[key].price = a.price;
+    }
+    return true;
+  } catch (err) {
+    console.warn('Pricing API unavailable, using fallback:', err.message);
+    DYNAMIC_PRICING = null;
+    PRICING = JSON.parse(JSON.stringify(PRICING_FALLBACK));
+    return false;
+  }
+}
 
 function escapeHtml(str) {
   const div = document.createElement('div');
@@ -64,12 +104,14 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await fetchPricing();
+
   const form = document.getElementById('solarQuiz');
   const progressFill = document.getElementById('progressFill');
   const backBtn = document.getElementById('backBtn');
   const quoteSummary = document.getElementById('quoteSummary');
-  
+
   const allSteps = Array.from(form.querySelectorAll('.quiz-step'));
   
   let currentStepIndex = 0;
@@ -819,7 +861,60 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function calcPackageTotal() {
-    let total = packageState.panels * PRICING.panelUnitPrice;
+    const tier = getTierFromHomeSize(formData.systemSize || (calculatedSystemSize || 'medium'));
+
+    if (DYNAMIC_PRICING) {
+      const { solar_materials, batteries, installation, overheads, addons } = DYNAMIC_PRICING;
+      const panelCount = packageState.panels;
+
+      // 1. Solar materials: (panel × count) + inverter + mounting_kit + tails_glands + ct + comms
+      let solarTotal = 0;
+      const solar = solar_materials?.[tier];
+      if (solar) {
+        for (const [costKey, item] of Object.entries(solar)) {
+          if (typeof item === 'object' && item !== null && 'price' in item) {
+            solarTotal += item.is_per_panel ? item.price * panelCount : item.price;
+          }
+        }
+      }
+
+      // 2. Battery: base + (base × 0.8 × (qty-1)) for extras + mounting_kit × qty
+      let batteryTotal = 0;
+      for (const [key, qty] of Object.entries(packageState.batteries)) {
+        if (qty > 0 && batteries?.[key]) {
+          const b = batteries[key];
+          const base = b.base_price;
+          const mount = b.mounting_kit_price || 100;
+          const discount = b.extra_unit_discount ?? 0.2;
+          batteryTotal += base + (base * (1 - discount) * (qty - 1)) + (mount * qty);
+        }
+      }
+
+      // 3. Scaffolding + Labour
+      let installTotal = 0;
+      const inst = installation?.[tier];
+      if (inst) {
+        const scaff = inst.scaffolding_standard || 0;
+        const roof = inst.labour_roofing || 0;
+        const elec = inst.labour_electrical || 0;
+        const disc = inst.labour_discount || 0;
+        installTotal = scaff + roof + elec - disc;
+      }
+
+      // 4. Overheads
+      const overheadTotal = overheads?.[tier] || 0;
+
+      // 5. Add-ons
+      let addonTotal = 0;
+      packageState.addons.forEach(a => {
+        addonTotal += addons?.[a]?.price || 0;
+      });
+
+      return Math.round(solarTotal + batteryTotal + installTotal + overheadTotal + addonTotal);
+    }
+
+    // Fallback: simple formula
+    let total = packageState.panels * (PRICING.panelUnitPrice || PRICING_FALLBACK.panelUnitPrice);
     for (const [key, qty] of Object.entries(packageState.batteries)) {
       total += (PRICING.batteries[key]?.price || 0) * qty;
     }
@@ -827,13 +922,41 @@ document.addEventListener('DOMContentLoaded', () => {
     return total;
   }
 
+  function getSolarMaterialsSubtotal() {
+    const tier = getTierFromHomeSize(formData.systemSize || (calculatedSystemSize || 'medium'));
+    if (DYNAMIC_PRICING?.solar_materials?.[tier]) {
+      const solar = DYNAMIC_PRICING.solar_materials[tier];
+      let sum = 0;
+      for (const [costKey, item] of Object.entries(solar)) {
+        if (typeof item === 'object' && item !== null && 'price' in item) {
+          sum += item.is_per_panel ? item.price * packageState.panels : item.price;
+        }
+      }
+      return sum;
+    }
+    return packageState.panels * (PRICING.panelUnitPrice || PRICING_FALLBACK.panelUnitPrice);
+  }
+
+  function getBatterySubtotal(key, qty) {
+    if (qty <= 0) return 0;
+    if (DYNAMIC_PRICING?.batteries?.[key]) {
+      const b = DYNAMIC_PRICING.batteries[key];
+      const base = b.base_price;
+      const mount = b.mounting_kit_price || 100;
+      const discount = b.extra_unit_discount ?? 0.2;
+      return base + (base * (1 - discount) * (qty - 1)) + (mount * qty);
+    }
+    return (PRICING.batteries[key]?.price || 0) * qty;
+  }
+
   function updatePackageUI() {
     const total   = calcPackageTotal();
     const kw      = ((packageState.panels * PRICING.panelWattage) / 1000).toFixed(1);
+    const solarSubtotal = getSolarMaterialsSubtotal();
 
     if (pkgPanelCount)  pkgPanelCount.textContent = packageState.panels;
     if (pkgPanelKw)     pkgPanelKw.textContent = kw + ' kW system';
-    if (pkgPanelPrice)  pkgPanelPrice.textContent = fmtGBP(packageState.panels * PRICING.panelUnitPrice);
+    if (pkgPanelPrice)  pkgPanelPrice.textContent = fmtGBP(solarSubtotal);
     if (pkgTotal)       pkgTotal.textContent = fmtGBP(total);
 
     if (panelMinusBtn) panelMinusBtn.disabled = packageState.panels <= PRICING.panelMin;
@@ -846,9 +969,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const minusBtn = document.querySelector(`[data-battery-action="minus"][data-battery-key="${key}"]`);
       if (countEl) countEl.textContent = qty;
       if (priceEl) {
+        const subtotal = getBatterySubtotal(key, qty);
         const unitPrice = PRICING.batteries[key]?.price || 0;
         priceEl.textContent = qty > 0
-          ? fmtGBP(unitPrice * qty)
+          ? fmtGBP(subtotal)
           : fmtGBP(unitPrice) + ' each';
       }
       if (card) card.classList.toggle('is-active', qty > 0);
@@ -930,15 +1054,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const total = calcPackageTotal();
     const kw    = ((packageState.panels * PRICING.panelWattage) / 1000).toFixed(1);
+    const solarSubtotal = getSolarMaterialsSubtotal();
 
     let linesHtml = '';
-    linesHtml += `<div class="order-summary__line"><span>Solar System (${kw} kW)</span><span>${fmtGBP(packageState.panels * PRICING.panelUnitPrice)}</span></div>`;
+    linesHtml += `<div class="order-summary__line"><span>Solar System (${kw} kW)</span><span>${fmtGBP(solarSubtotal)}</span></div>`;
 
     for (const [key, qty] of Object.entries(packageState.batteries)) {
       if (qty > 0) {
         const b = PRICING.batteries[key];
-        const label = qty > 1 ? `${qty} &times; ${b.label}` : b.label;
-        linesHtml += `<div class="order-summary__line"><span>${label}</span><span>${fmtGBP(b.price * qty)}</span></div>`;
+        const label = qty > 1 ? `${qty} &times; ${b?.label || key}` : (b?.label || key);
+        linesHtml += `<div class="order-summary__line"><span>${label}</span><span>${fmtGBP(getBatterySubtotal(key, qty))}</span></div>`;
       }
     }
 
