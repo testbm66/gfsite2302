@@ -70,8 +70,8 @@ function buildPricingPayload(data) {
     overheads: overheadsByTier,
     addons,
     panelWattage: 455,
-    panelMin: 4,
-    panelMax: 14,
+    panelMin: 6,
+    panelMax: 16,
   };
 }
 

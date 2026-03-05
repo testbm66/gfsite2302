@@ -781,6 +781,15 @@
 
       <!-- Step: Package Configuration -->
       <div class="quiz-step" data-step="package">
+        <div class="promo-banner" id="promoBanner" style="display:none;">
+          <div class="promo-banner__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="promo-banner__text">
+            <strong>15% off installation costs</strong>
+            <span>until 6th April inclusive</span>
+          </div>
+        </div>
         <h2 class="quiz-step__title">Your recommended solar package</h2>
         <p class="quiz-step__subtitle">Based on your answers, here's what we'd suggest. Adjust to suit your needs.</p>
 
@@ -794,7 +803,7 @@
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                 <circle cx="12" cy="10" r="3"/>
               </svg>
-              <span>Drag the pin to your roof</span>
+              <span>Click or drag the pin to mark your home</span>
             </div>
             <div class="map-confirm__coords" id="mapCoords"></div>
           </div>
@@ -809,20 +818,21 @@
                   <span class="pkg-section__price" id="pkgPanelPrice">--</span>
                 </div>
                 <div class="pkg-panel-selector">
-                  <button type="button" class="pkg-panel-btn" id="panelMinus" aria-label="Smaller system">
+                  <button type="button" class="pkg-panel-btn" id="panelMinus" aria-label="Remove panel">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   </button>
                   <div class="pkg-panel-display">
-                    <span class="pkg-panel-count" id="panelCount" style="display:none;">8</span>
-                    <span class="pkg-panel-kw" id="panelKw">3.6 kW system</span>
+                    <span class="pkg-panel-count" id="panelCount">10</span>
+                    <span class="pkg-panel-label">panels</span>
+                    <span class="pkg-panel-kw" id="panelKw">4.6 kW system</span>
                   </div>
-                  <button type="button" class="pkg-panel-btn" id="panelPlus" aria-label="Larger system">
+                  <button type="button" class="pkg-panel-btn" id="panelPlus" aria-label="Add panel">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   </button>
                 </div>
                 <div class="pkg-panel-range">
-                  <span>1.8 kW</span>
-                  <span>6.4 kW</span>
+                  <span>6 panels</span>
+                  <span>16 panels</span>
                 </div>
               </div>
 
@@ -909,7 +919,7 @@
                         <span class="pkg-addon__name">EV Charger</span>
                         <span class="pkg-addon__desc">Smart charger, prioritises solar</span>
                       </div>
-                      <span class="pkg-addon__price">+ &pound;999</span>
+                      <span class="pkg-addon__price" data-addon-price="ev-charger">+ &pound;999</span>
                     </div>
                   </label>
                   <label class="pkg-addon">
@@ -919,7 +929,7 @@
                         <span class="pkg-addon__name">Backup Gateway</span>
                         <span class="pkg-addon__desc">Home backup supply during grid power cut</span>
                       </div>
-                      <span class="pkg-addon__price">+ &pound;950</span>
+                      <span class="pkg-addon__price" data-addon-price="backup-gateway">+ &pound;950</span>
                     </div>
                   </label>
                   <label class="pkg-addon">
@@ -929,7 +939,7 @@
                         <span class="pkg-addon__name">Solar Diverter</span>
                         <span class="pkg-addon__desc">Divert surplus solar to hot water</span>
                       </div>
-                      <span class="pkg-addon__price">+ &pound;650</span>
+                      <span class="pkg-addon__price" data-addon-price="solo-diverter">+ &pound;650</span>
                     </div>
                   </label>
                 </div>
@@ -937,6 +947,10 @@
 
               <!-- Pricing Summary -->
               <div class="pkg-pricing">
+                <div class="pkg-pricing__row pkg-pricing__row--saving" id="pkgPromoSaving" style="display:none;">
+                  <span>15% install discount</span>
+                  <span class="pkg-pricing__saving" id="pkgSavingAmount">-&pound;0</span>
+                </div>
                 <div class="pkg-pricing__row">
                   <span>System total</span>
                   <span class="pkg-pricing__total" id="pkgTotal">&pound;5,999</span>

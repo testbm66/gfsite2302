@@ -19,10 +19,13 @@ const HUBSPOT_CONFIG = {
 // Tokens are safe for client-side use when restricted by domain.
 // ============================================
 const MAPBOX_CONFIG = {
-  accessToken: 'YOUR_MAPBOX_TOKEN',  // e.g., 'pk.eyJ1Ijoi...'
+  accessToken: '',
   style: 'mapbox://styles/mapbox/satellite-streets-v12',
-  defaultZoom: 17,
+  defaultZoom: 19,
+  markerZoom: 20,
   defaultCenter: [-3.19, 55.95],     // Scotland fallback (Edinburgh)
+  pitch: 45,
+  bearing: 0,
 };
 
 /* STRIPE CONFIGURATION — disabled, kept for future payment flow
@@ -38,8 +41,8 @@ const STRIPE_CONFIG = {
 // ============================================
 const PRICING_FALLBACK = {
   panelUnitPrice: 400,
-  panelMin: 4,
-  panelMax: 14,
+  panelMin: 6,
+  panelMax: 16,
   panelWattage: 455,
   batteries: {
     none:      { label: 'No battery',        price: 0    },
@@ -65,6 +68,25 @@ let DYNAMIC_PRICING = null; // Full API response when available
 function getTierFromHomeSize(homeSize) {
   const map = { small: 'lower', medium: 'mid', large: 'upper', unsure: 'mid' };
   return map[homeSize] || 'mid';
+}
+
+/**
+ * Determine pricing tier. Home size sets the initial tier, but if the user
+ * manually adjusts the panel count the tier follows the panel range:
+ *   6-8 → lower, 9-12 → mid, 13-16 → upper
+ */
+function getTier(panelCount, homeSize) {
+  if (panelCount <= 8)       return 'lower';
+  if (panelCount <= 12)      return 'mid';
+  return 'upper';
+}
+
+/** 15% installation promo — active until 6 April 2025 inclusive */
+const PROMO_INSTALL_DISCOUNT = 0.15;
+const PROMO_END_DATE = new Date('2026-04-07T00:00:00');
+
+function isPromoActive() {
+  return new Date() < PROMO_END_DATE;
 }
 
 /** Fetch pricing from /api/pricing and store in DYNAMIC_PRICING + PRICING */
@@ -758,9 +780,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   let installMap = null;
   let installMarker = null;
 
+  async function fetchMapboxToken() {
+    if (MAPBOX_CONFIG.accessToken) return MAPBOX_CONFIG.accessToken;
+    try {
+      const res = await fetch(`${window.location.origin}/api/mapbox-token`);
+      if (!res.ok) throw new Error(res.statusText);
+      const data = await res.json();
+      MAPBOX_CONFIG.accessToken = data.token || '';
+      return MAPBOX_CONFIG.accessToken;
+    } catch (err) {
+      console.warn('Could not fetch Mapbox token:', err.message);
+      return '';
+    }
+  }
+
   async function geocodePostcode(postcode) {
-    const token = MAPBOX_CONFIG.accessToken;
-    if (!token || token === 'YOUR_MAPBOX_TOKEN') {
+    const token = await fetchMapboxToken();
+    if (!token) {
       console.warn('Mapbox not configured — using default coordinates');
       return MAPBOX_CONFIG.defaultCenter;
     }
@@ -791,7 +827,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    mapboxgl.accessToken = MAPBOX_CONFIG.accessToken;
+    const token = await fetchMapboxToken();
+    if (!token) {
+      container.innerHTML = '<p style="padding:2rem;text-align:center;color:#666;">Map could not be loaded. You can continue without it.</p>';
+      return;
+    }
+    mapboxgl.accessToken = token;
 
     if (installMap) {
       installMap.remove();
@@ -803,11 +844,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       style: MAPBOX_CONFIG.style,
       center: coords,
       zoom: MAPBOX_CONFIG.defaultZoom,
+      pitch: MAPBOX_CONFIG.pitch || 0,
+      bearing: MAPBOX_CONFIG.bearing || 0,
     });
 
     installMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    installMarker = new mapboxgl.Marker({ color: '#2E8B57', draggable: true })
+    const markerEl = document.createElement('div');
+    markerEl.className = 'map-marker-pulse';
+
+    installMarker = new mapboxgl.Marker({ element: markerEl, draggable: true })
       .setLngLat(coords)
       .addTo(installMap);
 
@@ -822,6 +868,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     installMarker.on('dragend', () => {
       const lngLat = installMarker.getLngLat();
       updateCoordsDisplay(lngLat);
+    });
+
+    installMap.on('click', (e) => {
+      installMarker.setLngLat(e.lngLat);
+      updateCoordsDisplay(e.lngLat);
+      installMap.flyTo({
+        center: e.lngLat,
+        zoom: MAPBOX_CONFIG.markerZoom || MAPBOX_CONFIG.defaultZoom,
+        duration: 800,
+      });
     });
 
     installMap.on('load', () => {
@@ -861,7 +917,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function calcPackageTotal() {
-    const tier = getTierFromHomeSize(formData.systemSize || (calculatedSystemSize || 'medium'));
+    const tier = getTier(packageState.panels, formData.systemSize);
 
     if (DYNAMIC_PRICING) {
       const { solar_materials, batteries, installation, overheads, addons } = DYNAMIC_PRICING;
@@ -890,15 +946,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
-      // 3. Scaffolding + Labour
+      // 3. Scaffolding + Labour (no discount in standard pricing)
       let installTotal = 0;
       const inst = installation?.[tier];
       if (inst) {
         const scaff = inst.scaffolding_standard || 0;
         const roof = inst.labour_roofing || 0;
         const elec = inst.labour_electrical || 0;
-        const disc = inst.labour_discount || 0;
-        installTotal = scaff + roof + elec - disc;
+        let labour = roof + elec;
+
+        // 3b. Apply 15% promo discount on labour only (not scaffolding)
+        if (isPromoActive()) {
+          labour = Math.round(labour * (1 - PROMO_INSTALL_DISCOUNT));
+        }
+
+        installTotal = scaff + labour;
       }
 
       // 4. Overheads
@@ -923,7 +985,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function getSolarMaterialsSubtotal() {
-    const tier = getTierFromHomeSize(formData.systemSize || (calculatedSystemSize || 'medium'));
+    const tier = getTier(packageState.panels, formData.systemSize);
     if (DYNAMIC_PRICING?.solar_materials?.[tier]) {
       const solar = DYNAMIC_PRICING.solar_materials[tier];
       let sum = 0;
@@ -935,6 +997,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       return sum;
     }
     return packageState.panels * (PRICING.panelUnitPrice || PRICING_FALLBACK.panelUnitPrice);
+  }
+
+  function getInstallSaving() {
+    if (!isPromoActive() || !DYNAMIC_PRICING) return 0;
+    const tier = getTier(packageState.panels, formData.systemSize);
+    const inst = DYNAMIC_PRICING.installation?.[tier];
+    if (!inst) return 0;
+    const labourOnly = (inst.labour_roofing || 0) + (inst.labour_electrical || 0);
+    return Math.round(labourOnly * PROMO_INSTALL_DISCOUNT);
   }
 
   function getBatterySubtotal(key, qty) {
@@ -955,9 +1026,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const solarSubtotal = getSolarMaterialsSubtotal();
 
     if (pkgPanelCount)  pkgPanelCount.textContent = packageState.panels;
-    if (pkgPanelKw)     pkgPanelKw.textContent = kw + ' kW system';
+    if (pkgPanelKw)     pkgPanelKw.textContent = kw + ' kW';
+    const pkgPanelLabel = document.querySelector('.pkg-panel-label');
+    if (pkgPanelLabel)  pkgPanelLabel.textContent = packageState.panels === 1 ? 'panel' : 'panels';
     if (pkgPanelPrice)  pkgPanelPrice.textContent = fmtGBP(solarSubtotal);
     if (pkgTotal)       pkgTotal.textContent = fmtGBP(total);
+
+    const saving = getInstallSaving();
+    const promoRow = document.getElementById('pkgPromoSaving');
+    const savingAmt = document.getElementById('pkgSavingAmount');
+    if (promoRow) promoRow.style.display = saving > 0 ? 'flex' : 'none';
+    if (savingAmt) savingAmt.textContent = '-' + fmtGBP(saving);
 
     if (panelMinusBtn) panelMinusBtn.disabled = packageState.panels <= PRICING.panelMin;
     if (panelPlusBtn)  panelPlusBtn.disabled  = packageState.panels >= PRICING.panelMax;
@@ -979,6 +1058,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (minusBtn) minusBtn.disabled = qty <= 0;
     }
 
+    document.querySelectorAll('[data-addon-price]').forEach(el => {
+      const key = el.dataset.addonPrice;
+      const price = PRICING.addons[key]?.price;
+      if (price != null) el.textContent = '+ ' + fmtGBP(price);
+    });
+
     if (pkgSavings && formData.monthlyBill) {
       const annualGen = packageState.panels * CALC_CONFIG.panelOutputPerYear;
       const selfConsumed = annualGen * CALC_CONFIG.selfConsumptionRate;
@@ -993,10 +1078,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     let size = formData.systemSize;
     if (size === 'unsure') size = calculatedSystemSize;
     size = size || calculatedSystemSize;
-    if (size === 'small')       packageState.panels = 6;
+    if (size === 'small')       packageState.panels = 8;
     else if (size === 'medium') packageState.panels = 10;
     else if (size === 'large')  packageState.panels = 14;
-    else                        packageState.panels = 8;
+    else                        packageState.panels = 10;
 
     const batteryInterest = formData.battery;
     packageState.batteries = { duracell: 0, sigenergy: 0, tesla: 0 };
@@ -1005,6 +1090,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     packageState.addons = [];
     form.querySelectorAll('.pkg-addon input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+
+    const promoBanner = document.getElementById('promoBanner');
+    if (promoBanner) promoBanner.style.display = isPromoActive() ? 'flex' : 'none';
 
     updatePackageUI();
   }
