@@ -1093,6 +1093,17 @@ document.addEventListener('DOMContentLoaded', () => {
     formData._depositAmount  = 0;
   }
 
+  function collectContactData() {
+    const contactStep = getStepElement(9);
+    if (!contactStep) return;
+    const inputs = contactStep.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea');
+    inputs.forEach(input => {
+      if (input.name && input.value && input.value.trim()) {
+        formData[input.name] = input.value.trim();
+      }
+    });
+  }
+
   const getQuoteBtn = document.getElementById('getQuoteBtn');
   if (getQuoteBtn) {
     getQuoteBtn.addEventListener('click', async () => {
@@ -1101,6 +1112,7 @@ document.addEventListener('DOMContentLoaded', () => {
       getQuoteBtn.classList.add('btn--loading');
       isSubmitting = true;
 
+      collectContactData();
       collectPackageData();
       await doHubSpotSubmit('quote_requested');
 
@@ -1127,6 +1139,7 @@ document.addEventListener('DOMContentLoaded', () => {
       confirmCallbackBtn.classList.add('btn--loading');
       isSubmitting = true;
 
+      collectContactData();
       collectPackageData();
       const timeSelect = document.getElementById('callbackTime');
       formData._callbackTime = timeSelect ? timeSelect.value : 'anytime';
