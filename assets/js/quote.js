@@ -10,7 +10,7 @@
 // ============================================
 const HUBSPOT_CONFIG = {
   portalId: '143575537',
-  formGuid: '1gQIZksNSRqeDyXcp3akQ2g2dhbld'
+  formGuid: '81021992-c352-46a7-83c9-7729dda910da'
 };
 
 // ============================================
@@ -338,11 +338,16 @@ document.addEventListener('DOMContentLoaded', () => {
   */
 
   // BUG H FIX: show error screen when submission fails
-  function showSubmitError() {
+  function showSubmitError(err) {
     allSteps.forEach(step => step.classList.remove('is-active'));
     const errorStep = getStepElement('submit-error');
     if (errorStep) {
       errorStep.classList.add('is-active');
+      const errEl = errorStep.querySelector('.submit-error__details');
+      if (errEl) {
+        errEl.textContent = err ? (typeof err === 'string' ? err : JSON.stringify(err, null, 2)) : '';
+        errEl.style.display = err ? 'block' : 'none';
+      }
     }
     backBtn.classList.remove('is-visible');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -594,11 +599,11 @@ document.addEventListener('DOMContentLoaded', () => {
           showSuccess();
         }
       } else {
-        showSubmitError();
+        showSubmitError(hubspotResult.error);
       }
     } catch (err) {
       console.error('Submission error:', err);
-      showSubmitError();
+      showSubmitError(err.message || String(err));
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
